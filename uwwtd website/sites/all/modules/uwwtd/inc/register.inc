@@ -142,9 +142,10 @@ function uwwtd_register_set_operation(&$batch, $annee){
 
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));   
-    
+/*    
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+*/   
 
 }
 
@@ -5749,7 +5750,7 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
                 localid.field_inspireidlocalid_value as agg_id,
                 n.title, 
                 field_agggenerated_value as size,
-                concat(field_aggremarks_value,  ' ',field_aggchanges_value) as remark
+                concat(field_aggremarks_value,  ' ', field_aggchangescomment_value) as remark
         from {node} n
             join
                 {field_data_field_anneedata} f_annee
@@ -5767,7 +5768,7 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
                 {field_data_field_aggremarks} c
                 ON n.nid = c.entity_id
             left join 
-                {field_data_field_aggchanges} r
+                {field_data_field_aggchangescomment} r
                 ON n.nid = r.entity_id
              
                 
@@ -5788,7 +5789,6 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
     while($row = $result->fetchAssoc()) {
         $current[$row['agg_id']]  = $row;
     }
-
     $diff = array_diff(array_keys($current), array_keys($past));
     if(!empty($diff)){
         foreach($diff as $k){
@@ -11796,20 +11796,37 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //save date in array
             //=====FIX ME==========in case the plant status is active not connected, columns AX-BI are empty while the agglomerations have obligations
             //if deadline art4 is expired insert EXP in columns AX-AZ, and NC in columns BD-BF else insert PD everywhere columns AX-AZ & BD-BF, if deadline art5 is expired insert EXP in columns BA-BC and check if column AF 
-            if (in_array($pending_or_expired , [ 'PD' ,'EXP', 'EXP-PD'])) {
+            if (in_array($pending_or_expired , [ 'PD' , 'EXP-PD'])) {
                 $line[$ind['art4_treatment type']] = $art4_treatment_type;
                 $line[$ind['art4_monitoring']] = $art4_monitoring;
                 $line[$ind['art4_final']] = $uwwtp_compliance['compArt4'];
                 $line[$ind['art5_treatment type']] = $art5_treatment;
                 $line[$ind['art5_monitoring']] = $art5_monitoring;
                 $line[$ind['art5_final']] = $uwwtp_compliance['compArt5'];
-            } else {
-                $line[$ind['art4_treatment type']] = $pending_or_expired;
-                $line[$ind['art4_monitoring']] = $pending_or_expired;
-                $line[$ind['art4_final']] = $pending_or_expired;
-                $line[$ind['art5_treatment type']] = $pending_or_expired;
-                $line[$ind['art5_monitoring']] = $pending_or_expired;
-                $line[$ind['art5_final']] = $pending_or_expired;
+                if($pending_or_expired = 'PD'){
+                    $line[$ind['art4_expired_treatment type']] = $pending_or_expired;
+                    $line[$ind['art4_expired_monitoring']] = $pending_or_expired;
+                    $line[$ind['art4_expired_final']] = $pending_or_expired;
+                    $line[$ind['art5_expired_treatment type']] = $pending_or_expired;
+                    $line[$ind['art5_expired_monitoring']] = $pending_or_expired;
+                    $line[$ind['art5_expired_final']] = $pending_or_expired;
+                }
+            }
+            if (in_array($pending_or_expired , [ 'EXP' , 'EXP-PD'])) {
+                $line[$ind['art4_expired_treatment type']] = $art4_treatment_type;
+                $line[$ind['art4_expired_monitoring']] = $art4_monitoring;
+                $line[$ind['art4_expired_final']] = $uwwtp_compliance['compArt4'];
+                $line[$ind['art5_expired_treatment type']] = $art5_treatment;
+                $line[$ind['art5_expired_monitoring']] = $art5_monitoring;
+                $line[$ind['art5_expired_final']] = $uwwtp_compliance['compArt5'];
+                if($pending_or_expired = 'EXP'){
+                    $line[$ind['art4_treatment type']] = $pending_or_expired;
+                    $line[$ind['art4_monitoring']] = $pending_or_expired;
+                    $line[$ind['art4_final']] = $pending_or_expired;
+                    $line[$ind['art5_treatment type']] = $pending_or_expired;
+                    $line[$ind['art5_monitoring']] = $pending_or_expired;
+                    $line[$ind['art5_final']] = $pending_or_expired;
+                }
             }
 
             unset($uwwtp_compliance);
