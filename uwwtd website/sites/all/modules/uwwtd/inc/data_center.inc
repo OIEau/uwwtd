@@ -6756,7 +6756,6 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
             }
             if($agg->field_agggenerated['und'][0]['value'] > 10000){
                 if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-                    dsm("TEST1");
                     $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
                 }
                 else{
@@ -7015,7 +7014,9 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     global $conf;
     //art5(4) applies ?
     ////nd@oieau.fr :  11/06/2021 : Special rule ask by Benilde. In 2018, rule Art 5.2,3 have to be applied for France. Art 5.4 is not applicable for compliance assessement
-    if (true === $rcainfo['art54applies'] && $agg->field_anneedata['und'][0]['value'] !=2018 && $conf['siif_eru_country_code']!='fr') {
+    //if (true === $rcainfo['art54applies'] && $agg->field_anneedata['und'][0]['value'] !=2018 && $conf['siif_eru_country_code']!='fr') {
+        //nd@oieau.fr :  27/08/2021  Finalement on revient à l'ancien systeme à la demande d'Anna
+    if (true === $rcainfo['art54applies'] ) {
         uwwtd_trace('art54applies applies to agglo');
         uwwtd_trace(var_export($rcainfo, true));
         $nincoming   = $rcainfo['rca_n_incoming_measured']   + $rcainfo['rca_n_incoming_calculated']   + $rcainfo['rca_n_incoming_estimated'];
