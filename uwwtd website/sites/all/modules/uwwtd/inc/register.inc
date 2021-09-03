@@ -145,8 +145,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
 
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-   
-
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -10141,7 +10139,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                 //$dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . 'A54';
                                 $dcpTypeOfReceivingArea  = 'A54';
                             }
-                            
                             if(isset($dcp->field_dcprcaliste['und'])){
 			                    foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
 			                        $rca = node_load($rcanid['nid']);
@@ -10307,7 +10304,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //'type of receiving water',   ?dcpTypeOfReceivingArea
         $line[$ind['type_of_receiving_water']] = ($dcpTypeOfReceivingArea!=''?$dcpTypeOfReceivingArea:$GLOBALS['uwwtd']['default_by_cc'][$conf['siif_eru_country_code'] ]['rcaType']);
-        
         $line[$ind['rca_compliance']] = ($compliance_rca!=''?$compliance_rca:'NR');
         
         //'ID of the SA or LSA',   ?rcaID
