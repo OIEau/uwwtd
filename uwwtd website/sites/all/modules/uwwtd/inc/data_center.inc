@@ -5810,12 +5810,17 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
     elseif(isset($dbf['rcacode'])){
         $id = uwwtd_check_text($dbf['rcacode']);
         $geoType = 'CSA';
-    }    
+    }
+    elseif(isset($dbf['thematicid'])){
+        $id = uwwtd_check_text($dbf['thematicid']);
+        $geoType = 'SA';
+    }
     //for IE missing  type EUCD_SA_CA here
     elseif(isset($dbf['localid'])){
         $id = uwwtd_check_text($dbf['localid']);
         $geoType = 'SA';
     }
+    
     elseif(isset($dbf['iso2'])){
         $id = uwwtd_check_text($dbf['iso2']);
         $geoType = 'SA';
