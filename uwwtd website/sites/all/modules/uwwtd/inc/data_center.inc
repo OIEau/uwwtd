@@ -6749,6 +6749,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
 {   
     uwwtd_trace(__FUNCTION__);    
     $d_wot = ($agg->field_aggpercwithouttreatment['und'][0]['value']/100) *  $agg->field_agggenerated['und'][0]['value'];
+    global $conf;  
       
     //collected in collective system = 0 ==> it's probably an error in data or there is no linked uwwtp or all the load is manage in IAS
     if($agg->field_aggc1['und'][0]['value'] == 0){
@@ -6760,7 +6761,11 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
                 $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
             }
             if($agg->field_agggenerated['und'][0]['value'] > 10000){
-                if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+                //If the default rca is NA
+                if($GLOBALS['uwwtd']['default_by_cc'][$conf['siif_eru_country_code']]['rcaType']=='NA'){
+                    $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+                }
+                elseif(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
                     $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
                 }
                 else{
@@ -7089,7 +7094,6 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     if ($agg->field_agggenerated['und'][0]['value'] < 10000) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>'agggenerated<1000'];
     }
-    
     $aTmp['listUww'] = $listUwwtpCompliance;
     if (false === uwwtd_atleastone_uwwtp_required_in(array(
                             $GLOBALS['uwwtd_value']['required']['morestringent'],
@@ -7272,7 +7276,6 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
     }
       
     //treatement required = secondary && treatement in place = secondary
-    
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['secondary']
         && true === in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], array($GLOBALS['uwwtd_value']['inplace']['secondary'],$GLOBALS['uwwtd_value']['inplace']['morestringent']))) {  
         //We have to check if perf are ok but also if the secondary treatment is in place
