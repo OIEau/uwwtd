@@ -9558,7 +9558,12 @@ function uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, $listperf)
 {
     uwwtd_trace(__FUNCTION__);
     $bResult = true;
+    //Case of transboundary UWWTP in BE 
     if(in_array($uwwtp->field_inspireidlocalid['und'][0]['value'], array('BERW0000601','BERW5401001','BERW0000201','BERW0000104'))){
+        return true;
+    }
+    //Case of transboundary UWWTP in FI 
+    if(in_array($uwwtp->field_inspireidlocalid['und'][0]['value'], array('FI_SE2583_01'))){
         return true;
     }
 
