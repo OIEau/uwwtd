@@ -9942,8 +9942,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //'Compliance Art. 5 (whole agglo)',
 		//cn@oieau 18/01/2017 modified in order to have the individual compliance and not the hierarchical one
+        /*
+        //Case of art54
+		if($agg->isInRca54){
+			$line[$ind['compliance_art._5_(whole_agglo)']] = 'NR';
+		}elseif
+            */
         if (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)) {
-			if($agg->field_aggart5compliance['und'][0]['value'] == 'NC' && $line[$ind['not_compliant_art._5_(p._e.)']] == 0){
+            if($agg->field_aggart5compliance['und'][0]['value'] == 'NC' && $line[$ind['not_compliant_art._5_(p._e.)']] == 0){
 			   $line[$ind['compliance_art._5_(whole_agglo)']] = 'C';
 			}
 			else {
@@ -10427,7 +10433,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //dsm($line);
         ksort($line);
         fputcsv($r, $line, ';');
-
+        /*
+        dpm($ind);
+        dpm(array_combine(array_keys($ind),$line));
+        */
         //expired', 'pending')
         foreach ($listtypestat as $typestat) {
             if ( !isset($context['sandbox'][$typestat])) {
@@ -12996,10 +13005,12 @@ function uwwtd_create_register_2015_file_agglo_compliance_sheet16($annee, &$cont
         if($line[$indConf['type_of_receiving_water']['k']] =='A54'){
             $line[$indConf['compliance_art._5_(whole_agglo)_(hierarchical_approach)']['k']] = 'NR';
             
-            
-            if($line[$indConf['rca_compliance']['k']] == 'NC'){
+            /* disable because we don't consider art 5 compliance at agglomeration level if the agglomeration is in A54 SA
+            if($line[$indConf['rca_compliance']['k']] == 'NC' && $line[$indConf['generated_load_p_e']['k']] >= 10000){
                 $line[$indConf['compliance_agglo_global']['k']] = 'NC';
             }
+            */
+                $line[$indConf['compliance_agglo_global']['k']] = $line[$indConf['art4_compliance_art._4_(hierarchical_approach)']['k']];
         }
         $lines[$j] = $line;
         // uwwtd_trace(var_export($line, true)); 
