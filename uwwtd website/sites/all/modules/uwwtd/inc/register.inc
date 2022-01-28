@@ -148,7 +148,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
     */
     
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
+    //$batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee)); 
 }
 
