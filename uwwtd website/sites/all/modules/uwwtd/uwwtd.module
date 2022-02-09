@@ -583,6 +583,27 @@ function uwwtd_getNodesTitles($nids){
 	return false;
 }
 
+function uwwtd_form_alter(&$form, &$form_state, $form_id) {
+    if($form_id == "contact_site_form") {
+        //add input test field antispam
+        $form['description_form'] = [
+          '#description' => t("This question is for testing whether you are a human visitor and to prevent automated spam submissions."),
+          '#type' => 'textfield',
+          "#attributes"=>['placeholder'=>"YYYY-MM-DD"],
+          '#title' => t("Enter the current date in the form YYYY-MM-DD"),
+          '#element_validate' => ['uwwtd_test_antispam_answer'],
+        ];
+    }
+}
+/**
+ * validate form
+ */
+function uwwtd_test_antispam_answer($element, $form_state) {
+  if (! isset($form_state['values']['description_form']) || trim($form_state['values']['description_form']) != date("Y-m-d")) {
+    form_set_error('description_form', 'Bad answer for field "' . $element['#title'] .'"');
+  }
+}
+
 
 //Define if user is allowed to view the "compliance" tab on agglomeration page
 function uwwtd_check_node_compliance($node){
