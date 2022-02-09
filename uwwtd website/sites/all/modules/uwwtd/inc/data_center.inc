@@ -5810,12 +5810,17 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
     elseif(isset($dbf['rcacode'])){
         $id = uwwtd_check_text($dbf['rcacode']);
         $geoType = 'CSA';
-    }    
+    }
+    elseif(isset($dbf['thematicid'])){
+        $id = uwwtd_check_text($dbf['thematicid']);
+        $geoType = 'SA';
+    }
     //for IE missing  type EUCD_SA_CA here
     elseif(isset($dbf['localid'])){
         $id = uwwtd_check_text($dbf['localid']);
         $geoType = 'SA';
     }
+    
     elseif(isset($dbf['iso2'])){
         $id = uwwtd_check_text($dbf['iso2']);
         $geoType = 'SA';
@@ -6744,6 +6749,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
 {   
     uwwtd_trace(__FUNCTION__);    
     $d_wot = ($agg->field_aggpercwithouttreatment['und'][0]['value']/100) *  $agg->field_agggenerated['und'][0]['value'];
+    global $conf;  
       
     //collected in collective system = 0 ==> it's probably an error in data or there is no linked uwwtp or all the load is manage in IAS
     if($agg->field_aggc1['und'][0]['value'] == 0){
@@ -6755,7 +6761,11 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
                 $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
             }
             if($agg->field_agggenerated['und'][0]['value'] > 10000){
-                if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+                //If the default rca is NA
+                if($GLOBALS['uwwtd']['default_by_cc'][$conf['siif_eru_country_code']]['rcaType']=='NA'){
+                    $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+                }
+                elseif(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
                     $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
                 }
                 else{
@@ -7084,7 +7094,6 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     if ($agg->field_agggenerated['und'][0]['value'] < 10000) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>'agggenerated<1000'];
     }
-    
     $aTmp['listUww'] = $listUwwtpCompliance;
     if (false === uwwtd_atleastone_uwwtp_required_in(array(
                             $GLOBALS['uwwtd_value']['required']['morestringent'],
@@ -7162,7 +7171,7 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
 
 //Simulate art 5.2,3 compliance with 5.4 RCA 
 function uwwtd_article5_54_as_523_compliance($agg, $article, $listUwwtpCompliance, $rcainfo){
-    $rcainfo['art54applies'] = false;  
+    $rcainfo['art54applies'] = false; 
     foreach($listUwwtpCompliance as $k=>$v){
         $listUwwtpCompliance[$k]['required'] = $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'];
         $listUwwtpCompliance[$k]['compArt5'] = $listUwwtpCompliance[$k]['compArt54-523'];
@@ -7267,7 +7276,6 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
     }
       
     //treatement required = secondary && treatement in place = secondary
-    
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['secondary']
         && true === in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], array($GLOBALS['uwwtd_value']['inplace']['secondary'],$GLOBALS['uwwtd_value']['inplace']['morestringent']))) {  
         //We have to check if perf are ok but also if the secondary treatment is in place
@@ -7285,7 +7293,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
                     true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ntotperf', 'ptotperf'))
                     //TODO check if N & P equipement are in place
                     ){
-                         if(isset($uwwtp->field_uwwnremoval['und'][0]['value'])|| isset($uwwtp->field_uwwpremoval['und'][0]['value'])){
+                        if(isset($uwwtp->field_uwwnremoval['und'][0]['value'])|| isset($uwwtp->field_uwwpremoval['und'][0]['value'])){
                               if($uwwtp->field_uwwnremoval['und'][0]['value'] ==0 || $uwwtp->field_uwwpremoval['und'][0]['value'] == 0){
                                   $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
                               }else{
@@ -7302,7 +7310,8 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
                         //change nd@oieau.fr on 22/01/2021
                         if($uwwtp->field_uwwntotperf['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant'] && $uwwtp->field_uwwptotperf['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant'] ){
                             $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['no_information'];
-                        }elseif($uwwtp->field_uwwntotperf['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant'] || $uwwtp->field_uwwptotperf['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant'] ){
+                        }
+                        elseif($uwwtp->field_uwwntotperf['und'][0]['value'] == 'F' || $uwwtp->field_uwwptotperf['und'][0]['value'] == 'F' ){
                             $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
                         }else{
                             $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
@@ -9550,7 +9559,12 @@ function uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, $listperf)
 {
     uwwtd_trace(__FUNCTION__);
     $bResult = true;
+    //Case of transboundary UWWTP in BE 
     if(in_array($uwwtp->field_inspireidlocalid['und'][0]['value'], array('BERW0000601','BERW5401001','BERW0000201','BERW0000104'))){
+        return true;
+    }
+    //Case of transboundary UWWTP in FI 
+    if(in_array($uwwtp->field_inspireidlocalid['und'][0]['value'], array('FI_SE2583_01'))){
         return true;
     }
 
