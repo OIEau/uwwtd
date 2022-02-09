@@ -256,7 +256,7 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'Id code of the water body WFD' => array('k'=>$i++, 'xls'=>true),
     'ID of WFD river basin district' => array('k'=>$i++, 'xls'=>true),
     'entirely discharging into coastal waters?' => array('k'=>$i++, 'xls'=>true),
-    'type of receiving water' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'type_of_receiving_water' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     'ID of the SA or LSA' => array('k'=>$i++, 'xls'=>true),
     'rcaname' => array('k'=>$i++, 'xls'=>true),
     'Starting date of application 5.8.' => array('k'=>$i++, 'xls'=>true),

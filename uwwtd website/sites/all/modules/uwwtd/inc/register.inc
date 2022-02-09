@@ -149,8 +149,11 @@ function uwwtd_register_set_operation(&$batch, $annee){
     */
     
     //$batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee)); 
+    //$batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
+    //$batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee)); 
+    
+    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
+    
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -11105,7 +11108,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['ID of WFD river basin district'] => 'ID of WFD river basin district',
             $ind['agg article applied from rca'] => 'agg article applied from rca',
             $ind['entirely discharging into coastal waters?'] => 'entirely discharging into coastal waters?',
-            $ind['type of receiving water'] => 'type of receiving water',
+            $ind['type_of_receiving_water'] => 'type of receiving water',
             $ind['ID of the SA or LSA'] => 'ID of the SA or LSA',
             $ind['rcaname'] => 'name',
             $ind['Starting date of application 5.8.'] => 'Starting date of application 5.8.',
