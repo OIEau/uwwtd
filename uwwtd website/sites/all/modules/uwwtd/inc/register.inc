@@ -12138,7 +12138,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             //'N rate of removal %',   round(( (1- ($uwwtp->field_uwwndischarge['und'][0]['value'] / $uwwtp->field_uwwnincoming['und'][0]['value'])) *100), 2) . '%'
             if ($ndischarge  > 0 && $nincoming > 0) {
-                $line[$ind['N rate of removal %']] = ( 1- ($ndischarge  / $nincoming) *100);
+                $line[$ind['N rate of removal %']] = ( (1- ($ndischarge  / $nincoming)) *100);
             } else {
                 $line[$ind['N rate of removal %']] = '';
             }
