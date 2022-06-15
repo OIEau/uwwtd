@@ -152,8 +152,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
     //$batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
     //$batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee)); 
     
-    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee)); 
     
 }
@@ -1106,6 +1106,8 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
         $sheet->setCellValueByColumnAndRow($addcol+$ind['remark_successor/predecessor_sa'], $i, $rca[$ind['remark_successor/predecessor_sa']]);
         $sheet->setCellValueByColumnAndRow($addcol+$ind['related_sensitive_area_(2)'], $i, $rca[$ind['related_sensitive_area_(2)']]);
         $sheet->setCellValueByColumnAndRow($addcol+$ind['remark_related_sensitive_area_(2)'], $i, $rca[$ind['remark_related_sensitive_area_(2)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['nb_agg'], $i, $rca[$ind['nb_agg']]);
+        
         $i++;
         $sheet->insertNewRowBefore($i, 1);
     }
@@ -12624,10 +12626,12 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
         $ind['remark_successor/predecessor_sa'] => 'remark Successor/Predecessor SA', //; ?
         $ind['related_sensitive_area_(2)'] => 'Related sensitive area (2)', //; ?
         $ind['remark_related_sensitive_area_(2)'] => 'Remark Related sensitive area (2)', //; ?
+        $ind['nb_agg'] => 'Number of agglomerations', //; ?
+        
     );
 
     $rca = uwwtd_get_all_rca($annee);
-
+    //dpm($rca);
     //we must sort on $rca[$i]->title
     usort($rca, "sort_rca_by_title");    
 
@@ -12779,6 +12783,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['related_sensitive_area_(2)'] => $field_rca_sensitive_area, //($rca[$i]->field_specialisedzonetype['und'][0]['value'] != 'CSA' ? '' : $rca[$i]->field_rca_sensitive_area['und'][0]['value']),
             //'Remark Related sensitive area (2)', //;   ?
             $ind['remark_related_sensitive_area_(2)'] => $field_rcarelatedsaremark, //$rca[$i]->field_rcarelatedsaremark['und'][0]['value'],
+            $ind['nb_agg']  => count($rca[$i]->field_linked_agglomerations['und']),
         );
 
 

@@ -190,6 +190,7 @@ $GLOBALS['uwwtd']['sheet1_rca'] = array(
     'remark_successor/predecessor_sa' => $i++,
     'related_sensitive_area_(2)' => $i++,
     'remark_related_sensitive_area_(2)' => $i++,
+    'nb_agg'=>$i++
 );  
 
 $i = 0;
