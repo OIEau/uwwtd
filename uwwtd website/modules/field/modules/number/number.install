@@ -32,8 +32,8 @@ function number_field_schema($field) {
       $columns = array(
         'value' => array(
           'type' => 'numeric',
-          'precision' => isset($field['settings']['precision'])?$field['settings']['precision']:10,
-          'scale' => isset($field['settings']['scale'])?$field['settings']['scale']:2,
+          'precision' => $field['settings']['precision'],
+          'scale' => $field['settings']['scale'],
           'not null' => FALSE
         ),
       );
