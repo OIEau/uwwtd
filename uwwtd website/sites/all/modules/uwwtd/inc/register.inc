@@ -1107,6 +1107,7 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
         $sheet->setCellValueByColumnAndRow($addcol+$ind['related_sensitive_area_(2)'], $i, $rca[$ind['related_sensitive_area_(2)']]);
         $sheet->setCellValueByColumnAndRow($addcol+$ind['remark_related_sensitive_area_(2)'], $i, $rca[$ind['remark_related_sensitive_area_(2)']]);
         $sheet->setCellValueByColumnAndRow($addcol+$ind['nb_agg'], $i, $rca[$ind['nb_agg']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['nb_agg_agggenerated'], $i, $rca[$ind['nb_agg_agggenerated']]);
         
         $i++;
         $sheet->insertNewRowBefore($i, 1);
@@ -12627,6 +12628,8 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
         $ind['related_sensitive_area_(2)'] => 'Related sensitive area (2)', //; ?
         $ind['remark_related_sensitive_area_(2)'] => 'Remark Related sensitive area (2)', //; ?
         $ind['nb_agg'] => 'Number of agglomerations', //; ?
+         $ind['nb_agg_agggenerated'] => 'Agglomerations total generated loads', //; ?
+        
         
     );
 
@@ -12784,8 +12787,14 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Remark Related sensitive area (2)', //;   ?
             $ind['remark_related_sensitive_area_(2)'] => $field_rcarelatedsaremark, //$rca[$i]->field_rcarelatedsaremark['und'][0]['value'],
             $ind['nb_agg']  => count($rca[$i]->field_linked_agglomerations['und']),
+            $ind['nb_agg_agggenerated']  => count(), //=============get total agggenerated
         );
-
+        if(!empty($rca[$i]->field_linked_agglomerations['und'])){
+            $nids = array_column($rca[$i]->field_linked_agglomerations['und'], 'nid');
+            $nb_agg_agggenerated = uwwtd_get_statOnFieldValues('field_agggenerated', $nids, 'SUM');
+            $line[$ind['nb_agg_agggenerated']] = $nb_agg_agggenerated;
+        }
+        
 
 
         fputcsv($r, $line, ';');

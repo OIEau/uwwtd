@@ -265,6 +265,22 @@ function uwwtd_get_gg_snapshot($dest_uri, $lat, $lon, $maptype, $zoom = 15, $siz
 }
 
 
+function uwwtd_get_statOnFieldValues($field_name, $nids = [], $op = 'SUM'){
+    if(!empty($nids)){
+        $field_table = 'field_data_'.$field_name;
+        $field_col = $field_name.'_value';
+        
+        $query = "SELECT ".$op."(".$field_col.") FROM {".$field_table."} WHERE entity_id IN (".implode(',', $nids).") ";
+        //$result = db_query($query, [':bundle'=>$bundle]);
+        $result = db_query($query);
+        $output = $result->fetchField();
+        return $output;
+    }else{
+        return 0;
+    }
+    
+}
+
 /**
  *
  */
