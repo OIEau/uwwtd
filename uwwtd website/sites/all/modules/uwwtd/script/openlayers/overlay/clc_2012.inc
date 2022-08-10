@@ -7,7 +7,7 @@ $openlayers_layers->name = 'corine_land_cover_2012';
 $openlayers_layers->title = 'Corine Land Cover 2012';
 $openlayers_layers->description = 'CLC2012 is one of the datasets produced within the frame the Corine Land Cover programme referring to land cover / land use status of year 2012.';
 $openlayers_layers->data = array(
-  'base_url' => 'http://image.discomap.eea.europa.eu/arcgis/services/Corine/CLC2012/MapServer/WMSServer',
+  'base_url' => 'https://image.discomap.eea.europa.eu/arcgis/services/Corine/CLC2012/MapServer/WMSServer',
   'params' => array(
     'buffer' => '2',
     'ratio' => '1.5',
@@ -18,7 +18,7 @@ $openlayers_layers->data = array(
     'exceptions' => 'application/vnd.ogc.se_inimage',
     'format' => 'image/png',
     'layers' => array(
-      0 => 'Corine Land Cover 2012 raster',
+      0 => 'Corine_Land_Cover_2012_raster59601',
     ),
     'styles' => '',
   ),
