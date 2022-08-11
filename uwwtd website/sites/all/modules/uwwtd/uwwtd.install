@@ -5599,6 +5599,7 @@ function uwwtd_update_7184(&$context) {
     $variables = array(
         'jquery_update_custom_path_jqueryui' =>'/uwwtd_'.$country_code.'/sites/all/modules/jquery_update/replace/ui/jquery-ui-1.12.1/jquery-ui.min.js',
         'jquery_update_custom_version_jqueryui'=>'1.12.1',
+        'jquery_update_jquery_version'=>'2.2'
         /*
         'jquery_update_custom_path_cookie',
         'jquery_update_custom_path_form',
@@ -5615,6 +5616,9 @@ function uwwtd_update_7184(&$context) {
     foreach($variables as $var=>$val){
         variable_set($var, $val);
     }
+    $theme_settings = variable_get('theme_uwwtd_settings');
+    $theme_settings['jquery_update_jquery_version'] = '2.2';
+    variable_set('theme_uwwtd_settings', $theme_settings);
     variable_set('siif_eru_version', __FUNCTION__);
 } 
 
