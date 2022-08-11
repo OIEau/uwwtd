@@ -5570,6 +5570,58 @@ function uwwtd_update_7182(&$context) {
     variable_set('siif_eru_version', __FUNCTION__);
 } 
 
+//Update corine land cover layer
+function uwwtd_update_7183(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    $list_map = array(
+        'waste_water_treatment_network_map.inc',
+        'agg_compliance_map.inc',
+        'agglomeration.inc',
+        'uwwtp_compliance_map.inc',
+        'uwwtp_treatment_map.inc',
+        'uwwtp_pressure_map.inc',
+        'dcp_map.inc',
+        'dcp_reuse_map.inc',
+        'rca_map.inc',
+        
+    );
+    uwwtd_update_map_overlay($country_config, $country_code, $list_map, array('clc_2012.inc','clc_2018.inc'), array('-'));
+
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
+//Update jquery_update
+function uwwtd_update_7184(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    $variables = array(
+        'jquery_update_custom_path_jqueryui' =>'/uwwtd_'.$country_code.'/sites/all/modules/jquery_update/replace/ui/jquery-ui-1.12.1/jquery-ui.min.js',
+        'jquery_update_custom_version_jqueryui'=>'1.12.1',
+        'jquery_update_jquery_version'=>'2.2'
+        /*
+        'jquery_update_custom_path_cookie',
+        'jquery_update_custom_path_form',
+        'jquery_update_custom_path_jquery',
+        'jquery_update_custom_path_jqueryui',
+        'jquery_update_custom_path_migrate',
+        'jquery_update_custom_version_jquery',
+        'jquery_update_custom_version_jquery_cookie',
+        'jquery_update_custom_version_jquery_form',
+        'jquery_update_custom_version_jquery_migrate',
+        'jquery_update_custom_version_jqueryui',
+        */
+    );
+    foreach($variables as $var=>$val){
+        variable_set($var, $val);
+    }
+    $theme_settings = variable_get('theme_uwwtd_settings');
+    $theme_settings['jquery_update_jquery_version'] = '2.2';
+    variable_set('theme_uwwtd_settings', $theme_settings);
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
+
 /**
  * Create a big city or update it
  * @param  array $row  Code/ country code / Label
@@ -6032,6 +6084,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'oieau_rbd_rbdsu.inc',
         'natura2000.inc',
         'clc_2012.inc',
+        'clc_2018.inc',
         
         'soe_monitoring_stations.inc',  //deprecated
         'soe_nitrates_2011.inc',        //deprecated
