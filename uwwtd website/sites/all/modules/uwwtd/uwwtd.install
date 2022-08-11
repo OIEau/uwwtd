@@ -5615,8 +5615,7 @@ function uwwtd_update_7184(&$context) {
     foreach($variables as $var=>$val){
         variable_set($var, $val);
     }
-    */
-    //variable_set('siif_eru_version', __FUNCTION__);
+    variable_set('siif_eru_version', __FUNCTION__);
 } 
 
 /**
