@@ -11,8 +11,8 @@ function uwwtd_statistics_menu() {
   $items['uwwtd_statistics'] = array(
     'title' => 'Statistics',
     'page callback' => 'uwwtd_statistics_page',
-    'access callback' => true,
-    'access callback' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'file' => 'inc/statistics_load.inc',
     'type' => MENU_CALLBACK,
   );
@@ -21,7 +21,8 @@ function uwwtd_statistics_menu() {
     'title' => 'Statistics',
     'page callback' => 'uwwtd_statistics_page',
     'page arguments' => array(1),
-    'access callback' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'file' => 'inc/statistics_load.inc',
     'type' => MENU_CALLBACK,
   );
@@ -30,7 +31,8 @@ function uwwtd_statistics_menu() {
     'title' => 'Statistics',
     'page callback' => 'uwwtd_statistics_page',
     'page arguments' => array(1,2),
-    'access callback' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'file' => 'inc/statistics_load.inc',
     'type' => MENU_CALLBACK,
   );

@@ -79,7 +79,8 @@
         
     */ 
 ?>
-<div style="font-size:18px;width:100%;background-color:#b22222;text-align:center;padding:5px;text-shadow: 1px 1px #343d43;color:#fff;"><b>Beta Version :</b> <span style="font-size:16px;">remaining inconsistencies are possible. They will be corrected during the next reporting exercise</span></div>
+
+<div style="font-size:18px;width:100%;background-color:#b22222;text-align:center;padding:5px;text-shadow: 1px 1px #343d43;color:#fff;"><b>The end of SIIF :</b> <span style="font-size:16px;">The UWWTD-SIIF is stopped. For all UWWTD related information please see the EEA website</span></div>
 
 
 
