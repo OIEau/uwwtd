@@ -10,7 +10,8 @@ function uwwtd_map_menu(){
 		'description' => t('Europe Map'),
 		'page callback' => 'uwwtd_map_display_map',
 		'page arguments' => array(),
-		'access callback' => TRUE,
+		'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
 	);
 
   	$items['map/europe/generate'] = array(

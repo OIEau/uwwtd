@@ -5621,6 +5621,44 @@ function uwwtd_update_7184(&$context) {
     variable_set('theme_uwwtd_settings', $theme_settings);
     variable_set('siif_eru_version', __FUNCTION__);
 } 
+function uwwtd_update_7185(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    $variables = array(
+        'jquery_update_custom_path_jqueryui' =>'/sites/all/modules/jquery_update/replace/ui/jquery-ui-1.12.1/jquery-ui.min.js',
+        'jquery_update_custom_version_jqueryui'=>'1.12.1',
+        'jquery_update_jquery_version'=>'2.2'
+        /*
+        'jquery_update_custom_path_cookie',
+        'jquery_update_custom_path_form',
+        'jquery_update_custom_path_jquery',
+        'jquery_update_custom_path_jqueryui',
+        'jquery_update_custom_path_migrate',
+        'jquery_update_custom_version_jquery',
+        'jquery_update_custom_version_jquery_cookie',
+        'jquery_update_custom_version_jquery_form',
+        'jquery_update_custom_version_jquery_migrate',
+        'jquery_update_custom_version_jqueryui',
+        */
+    );
+    foreach($variables as $var=>$val){
+        variable_set($var, $val);
+    }
+    $theme_settings = variable_get('theme_uwwtd_settings');
+    $theme_settings['jquery_update_jquery_version'] = '2.2';
+    variable_set('theme_uwwtd_settings', $theme_settings);
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
+
+function uwwtd_update_7186(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    module_enable(['piwik']);
+    variable_set('piwik_url_http', 'http://po.oieau.fr/piwik/');
+    variable_set('piwik_url_https', 'https://po.oieau.fr/piwik/');
+    variable_set('piwik_site_id', '43');
+
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
 
 /**
  * Create a big city or update it
@@ -6994,6 +7032,7 @@ function  uwwtd_install_enable_module(&$context)
         
         //GDPR 
         'EU Cookie Compliance'=>'eu_cookie_compliance',
+        'Piwik'=>'piwik',
         
         //Security 
         'Password policy'=>'password_policy',

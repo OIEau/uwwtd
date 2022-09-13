@@ -9,7 +9,8 @@ require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 //get all color from database ?   $field = field_info_field('field_uwwtd_err_category');
 
 function uwwtd_menu(){
-	$items = array();
+    $items = array();
+    
 	$items['admin/config/uwwtd/create_config_file_display'] = array(
 		'title' => t('Create config file display'),
 		'description' => t('Create config file display'),
@@ -94,7 +95,8 @@ function uwwtd_menu(){
     'title' => t('Article 17 export'),
     'page callback' => 'uwwtd_article17_export',
     'page arguments' => array(1),
-    'access callback' => TRUE,
+   'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     //'access arguments' => array('Data-management access'),
     'file' => 'inc/article17.inc',
     'file path' => drupal_get_path('module', 'uwwtd')
@@ -104,7 +106,8 @@ function uwwtd_menu(){
         'page callback' => 'uwwtd_node_redirect',
         'page arguments' => array(1,2),
         'access arguments' => true,
-        'access callback' => TRUE,
+        'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
         'type' => MENU_CALLBACK,
     );
   $items['id/%/%/view'] = array(
@@ -127,15 +130,15 @@ function uwwtd_menu(){
   $items['treatment-plant/%'] = array(
     'page callback' => 'uwwtd_node_redirection',
     'page arguments' => array(1),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
   );
   $items['treatment-plant/%/history'] = array(
     'page callback' => 'uwwtd_uwwtp_history_page',
     'page arguments' => array(1),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'uwwtd.graphs.inc',
  	'file path' => drupal_get_path('module', 'uwwtd')
@@ -144,15 +147,15 @@ function uwwtd_menu(){
   $items['agglomeration/%'] = array(
     'page callback' => 'uwwtd_node_redirection',
     'page arguments' => array(1),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
   );
   $items['agglomeration/%/history'] = array(
     'page callback' => 'uwwtd_agg_history_page',
     'page arguments' => array(1),
-    'access callback' => true,
-    'access arguments' => true,
+     'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'uwwtd.graphs.inc',
  	'file path' => drupal_get_path('module', 'uwwtd')
@@ -162,24 +165,24 @@ function uwwtd_menu(){
   $items['receiving-area/%'] = array(
     'page callback' => 'uwwtd_node_redirection',
     'page arguments' => array(1),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
   );
   //redirection discharge-point
   $items['discharge-point/%'] = array(
     'page callback' => 'uwwtd_node_redirection',
     'page arguments' => array(1),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
   );
   ///////////////////////////////////////////////////////////////////
   $items['agglomerations/compliance'] = array(
     'page callback' => 'uwwtd_page_agglomeration_compliance',
     'page arguments' => array(),
-    'access callback' => true,
-    'access arguments' => true,
+   'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -187,8 +190,8 @@ function uwwtd_menu(){
   $items['agglomerations/compliance/csv'] = array(
     'page callback' => 'uwwtd_page_agglomeration_compliance',
     'page arguments' => array('csv'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -196,8 +199,8 @@ function uwwtd_menu(){
   $items['agglomerations/compliance/xls'] = array(
     'page callback' => 'uwwtd_page_agglomeration_compliance',
     'page arguments' => array('xls'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -205,8 +208,8 @@ function uwwtd_menu(){
   $items['agglomerations/connection'] = array(
     'page callback' => 'uwwtd_page_agglomeration_connection',
     'page arguments' => array(),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -214,8 +217,8 @@ function uwwtd_menu(){
   $items['agglomerations/connection/csv'] = array(
     'page callback' => 'uwwtd_page_agglomeration_connection',
     'page arguments' => array('csv'),
-    'access callback' => true,
-    'access arguments' => true,
+   'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -223,8 +226,8 @@ function uwwtd_menu(){
   $items['agglomerations/connection/xls'] = array(
     'page callback' => 'uwwtd_page_agglomeration_connection',
     'page arguments' => array('xls'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -232,8 +235,8 @@ function uwwtd_menu(){
   $items['uwwtps/compliance'] = array(
     'page callback' => 'uwwtd_page_uwwtps_compliance',
     'page arguments' => array(),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -241,8 +244,8 @@ function uwwtd_menu(){
   $items['uwwtps/compliance/csv'] = array(
     'page callback' => 'uwwtd_page_uwwtps_compliance',
     'page arguments' => array('csv'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -250,8 +253,8 @@ function uwwtd_menu(){
   $items['uwwtps/compliance/xls'] = array(
     'page callback' => 'uwwtd_page_uwwtps_compliance',
     'page arguments' => array('xls'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -259,8 +262,8 @@ function uwwtd_menu(){
   $items['uwwtps/treatment'] = array(
     'page callback' => 'uwwtd_page_uwwtps_treatment',
     'page arguments' => array(),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -268,8 +271,8 @@ function uwwtd_menu(){
   $items['uwwtps/treatment/csv'] = array(
     'page callback' => 'uwwtd_page_uwwtps_treatment',
     'page arguments' => array('csv'),
-    'access callback' => true,
-    'access arguments' => true,
+   'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -277,8 +280,8 @@ function uwwtd_menu(){
   $items['uwwtps/treatment/xls'] = array(
     'page callback' => 'uwwtd_page_uwwtps_treatment',
     'page arguments' => array('xls'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -286,8 +289,8 @@ function uwwtd_menu(){
   $items['uwwtps/pressure'] = array(
     'page callback' => 'uwwtd_page_uwwtps_pressure',
     'page arguments' => array(),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -295,8 +298,8 @@ function uwwtd_menu(){
   $items['uwwtps/pressure/csv'] = array(
     'page callback' => 'uwwtd_page_uwwtps_pressure',
     'page arguments' => array('csv'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -304,8 +307,8 @@ function uwwtd_menu(){
   $items['uwwtps/pressure/xls'] = array(
     'page callback' => 'uwwtd_page_uwwtps_pressure',
     'page arguments' => array('xls'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -314,7 +317,8 @@ function uwwtd_menu(){
   $items['sensitive-areas'] = array(
     'title' => 'Sensitive areas',
     'page callback' => 'uwwtd_sensitive_areas_page',
-    'access callback' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -322,8 +326,8 @@ function uwwtd_menu(){
   $items['sensitive_areas/csv'] = array(
     'page callback' => 'uwwtd_sensitive_areas_page',
     'page arguments' => array('csv'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -331,8 +335,8 @@ function uwwtd_menu(){
   $items['sensitive_areas/xls'] = array(
     'page callback' => 'uwwtd_sensitive_areas_page',
     'page arguments' => array('xls'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -341,7 +345,8 @@ function uwwtd_menu(){
   $items['discharge-points'] = array(
     'title' => 'Discharge points',
     'page callback' => 'uwwtd_dcp_page',
-    'access callback' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -349,8 +354,8 @@ function uwwtd_menu(){
   $items['discharge-points/csv'] = array(
     'page callback' => 'uwwtd_dcp_page',
     'page arguments' => array('csv'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -358,8 +363,8 @@ function uwwtd_menu(){
   $items['discharge-points/xls'] = array(
     'page callback' => 'uwwtd_dcp_page',
     'page arguments' => array('xls'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -368,7 +373,8 @@ function uwwtd_menu(){
     $items['discharge-points/reuse'] = array(
     'title' => 'Discharge points',
     'page callback' => 'uwwtd_dcp_reuse_page',
-    'access callback' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -376,8 +382,8 @@ function uwwtd_menu(){
   $items['discharge-points/reuse/csv'] = array(
     'page callback' => 'uwwtd_dcp_reuse_page',
     'page arguments' => array('csv'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -385,8 +391,8 @@ function uwwtd_menu(){
   $items['discharge-points/reuse/xls'] = array(
     'page callback' => 'uwwtd_dcp_reuse_page',
     'page arguments' => array('xls'),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
@@ -395,8 +401,8 @@ function uwwtd_menu(){
   $items['download'] = array(
     'page callback' => 'uwwtd_page_download',
     'page arguments' => array(),
-    'access callback' => true,
-    'access arguments' => true,
+    'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
     'type' => MENU_CALLBACK,
   );
   ///////////////////////////////////////////////////////////////////
@@ -431,8 +437,8 @@ function uwwtd_menu(){
   $items['stats/querys'] = array(
   		'page callback' => 'uwwtd_page_stats_querys',
   		'page arguments' => array(),
-  		'access callback' => true,
-  		'access arguments' => true,
+  		'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
   		'type' => MENU_CALLBACK,
   		'file' => 'uwwtd.stats.inc',
   		'file path' => drupal_get_path('module', 'uwwtd')
@@ -440,8 +446,8 @@ function uwwtd_menu(){
   $items['stats/graphs'] = array(
   		'page callback' => 'uwwtd_stats_graphs_page',
   		'page arguments' => array(),
-  		'access callback' => true,
-  		'access arguments' => true,
+  		'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
   		'type' => MENU_CALLBACK,
   		'file' => 'uwwtd.graphs.inc',
   		'file path' => drupal_get_path('module', 'uwwtd')
@@ -449,8 +455,8 @@ function uwwtd_menu(){
   $items['stats/summary'] = array(
   		'page callback' => 'drupal_get_form',
   		'page arguments' => array('uwwtd_stats_summary_chapter_form'),
-  		'access callback' => true,
-  		'access arguments' => true,
+  		'access callback' => "uwwtd_userIsConnected",
+    'access arguments' => array(),
   		'type' => MENU_CALLBACK,
   		'file' => 'uwwtd.graphs.inc',
   		'file path' => drupal_get_path('module', 'uwwtd')
@@ -526,6 +532,30 @@ function uwwtd_menu(){
 
   return $items;
 }
+function uwwtd_userIsConnected(){
+    global $user;
+    //print_r($user);
+    //exit("uwwtd_userIsConnected");
+    if($user->uid != 0){
+        return true;
+    }
+    return false;
+}
+function uwwtd_node_access($node, $op, $account) {
+    // get type of node.
+  $type = is_string($node) ? $node : $node->type;
+  //print_r($account);
+    if($op =='view'){
+        if(in_array($type, ['agglomeration', 'uwwtp', 'discharge_point', 'receiving_area', 'agglo_uww', 'article_17_ms_level', 'article_17_agglomeration', 'article_17_uwwtp', 'big_city', 'ms_level'])){
+            if($account->uid == 0){
+                return NODE_ACCESS_DENY;
+            }
+            
+        }
+    }
+    return NODE_ACCESS_IGNORE;
+}
+
 
 function uwwtd_field_formatter_info() {
     $formatters = array(
