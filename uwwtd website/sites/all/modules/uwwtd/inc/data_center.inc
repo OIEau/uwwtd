@@ -6790,7 +6790,13 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     if (true === uwwtd_all_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['appropriate']), $infoAllAggUww)) {
         //if there is not connected uwwtp, we can't consider that the required treatment is in place so art 4 is not compliant
         if(array_sum(array_column($infoAllAggUww['listUww'], 'connected'))==0){
-            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            
+            if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+                $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            }else{
+                $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];  
+            }
+            
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
             $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];  
         }
