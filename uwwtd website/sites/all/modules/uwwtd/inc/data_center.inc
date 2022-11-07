@@ -5204,12 +5204,12 @@ function uwwtd_link_uww_agglo_node($annee, $aggNid, $tpNid, $data = [], $repCode
 
         // Remove this agglomeration from the list of agglomeration without treatment plants :
         $aggsWithoutTp = variable_get(AGGS_WITHOUT_TP, array());
-        _remove_array_element_by_value($aggId, $aggsWithoutTp);
+        _remove_array_element_by_value($aggNid, $aggsWithoutTp);
         variable_set(AGGS_WITHOUT_TP, $aggsWithoutTp);
 
         // Remove this treatment plant from the list of treatment plants without agglomeration :
         $tpsWithoutAgg = variable_get(TPS_WITHOUT_AGG, array());
-        _remove_array_element_by_value($uwwId, $tpsWithoutAgg);
+        _remove_array_element_by_value($tpNid, $tpsWithoutAgg);
         variable_set(TPS_WITHOUT_AGG, $tpsWithoutAgg);
     return $aggTpLinkFull;
 }
