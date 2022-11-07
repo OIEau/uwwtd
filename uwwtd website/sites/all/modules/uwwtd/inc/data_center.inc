@@ -665,8 +665,6 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
     );
     
-    //dpm($datas);
-    
     //delete all error from previous import
     $batch['operations'][]=array('uwwtd_delete_error', array($annee, 'import'));
 
@@ -674,6 +672,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     /*Fix nd@oieau.fr 09/06/2016 : reprocess the ReceivingAreas import ==> the batch operation not working before*/
     //ReceivingAreas
     $imports  = array();
+
     //Old reporting format (8th)
     if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
         //Case of country with only one RCA
@@ -779,6 +778,51 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             }
         }
     }
+    //Case of the 11th report
+    elseif(isset($datas['ReceivingAreas_SAMain'])){
+        if(!isset($datas['ReceivingAreas_SAMain']['Row']['rcaCode'])){
+            foreach($datas['ReceivingAreas_SAMain']['Row'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
+        }
+        //nd@oieau.fr 17/07/2018 : check how this tag appear in $datas when we have only one item
+        else{
+            foreach($datas['ReceivingAreas_SAMain'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
+        }
+        $subkeys = array(
+            'ReceivingAreasSA_Parameter'=>'Row',
+            'ReceivingAreas_SA54'=>'Row',
+            'ReceivingAreas_SASA'=>'Row',
+            'ReceivingAreasSALSA_Predecessor'=>'Row'
+        );
+        foreach ($subkeys as $root=>$key) {
+            if (isset($datas[$root]) && isset($datas[$root][$key])) {
+                foreach ($datas[$root][$key] as $baliseName => $rcaValue){
+                    if (!is_array($rcaValue)) {
+                        // Get rcaCode :
+                        $rcaCode = '';
+                        foreach($datas[$root][$key] as $key2 => $rcaValue2) {
+                            if ($key2 === 'rcaCode') {
+                                $rcaCode = $rcaValue2;
+                            }
+                        }
+
+                        // if $rcaCode found :
+                        if (!empty($rcaCode)) {
+                            $imports[$rcaCode][$root][0][$baliseName] = $rcaValue;
+                        }
+                    } else {
+                        if(isset($imports[$rcaValue['rcaCode']])){
+                            //ajout d'un tableau
+                            $imports[$rcaValue['rcaCode']][$root][] = $rcaValue;
+                        }
+                    }
+                }
+            }
+        }
+    }
     if(isset($datas['ReceivingAreasLSA'])){
         if(!isset($datas['ReceivingAreasLSA']['Row']['rcaCode'])){
             foreach($datas['ReceivingAreasLSA']['Row'] as $rca){
@@ -793,6 +837,48 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         $subkeys = array(
             'ReceivingAreasSALSAPredecessor'=>'Row'
+        );
+        foreach ($subkeys as $root=>$key) {
+            if (isset($datas[$root]) && isset($datas[$root][$key])) {
+                foreach ($datas[$root][$key] as $baliseName => $rcaValue){
+                    if (!is_array($rcaValue)) {
+                        // Get rcaCode :
+                        $rcaCode = '';
+                        foreach($datas[$root][$key] as $key2 => $rcaValue2) {
+                            if ($key2 === 'rcaCode') {
+                                $rcaCode = $rcaValue2;
+                            }
+                        }
+
+                        // if $rcaCode found :
+                        if (!empty($rcaCode)) {
+                            $imports[$rcaCode][$root][0][$baliseName] = $rcaValue;
+                        }
+                    } else {
+                        if(isset($imports[$rcaValue['rcaCode']])){
+                            //ajout d'un tableau
+                            $imports[$rcaValue['rcaCode']][$root][] = $rcaValue;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    //Case of 11th report
+    elseif(isset($datas['ReceivingAreas_LSA'])){
+        if(!isset($datas['ReceivingAreas_LSA']['Row']['rcaCode'])){
+            foreach($datas['ReceivingAreas_LSA']['Row'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
+        }
+        //nd@oieau.fr 17/07/2018 : check how this tag appear in $datas when we have only one item
+        else{
+            foreach($datas['ReceivingAreas_LSA'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
+        }
+        $subkeys = array(
+            'ReceivingAreas_SALSAPredecessor'=>'Row'
         );
         foreach ($subkeys as $root=>$key) {
             if (isset($datas[$root]) && isset($datas[$root][$key])) {
@@ -1021,7 +1107,6 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         $batch['operations'][]=array('uwwtd_import_dcp_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
-
     //link_dcp_rca
     $imports  = array();
     if(isset($datas['UWWTD_Report']['DischargePoints'])){
@@ -1049,8 +1134,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         */
         $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $timestamp));
     }
-
-    //UwwtpAgglos
+   //UwwtpAgglos
     $imports  = array();
     if(isset($datas['UWWTD_Report']['UwwtpAgglos'])){
         if(isset($datas['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo']['aucUwwCode'])){
@@ -1117,7 +1201,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         $batch['operations'][]=array('uwwtd_link_bc_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
 
-    /*DG 15/12/2015 Contact*/
+    //DG 15/12/2015 Contact
     $imports  = array();
     if(isset($datas['UWWTD_Report']['Contacts'])){
         if(isset($datas['UWWTD_Report']['Contacts']['Contact']['repCode'])){
@@ -1143,7 +1227,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
 
-    /*DG 15/12/2015 Industry*/
+    //DG 15/12/2015 Industry
     $imports  = array();
     if(isset($datas['UWWTD_Report']['Industries'])){
         if(isset($datas['UWWTD_Report']['Industries']['Industry']['repCode'])){
@@ -1189,7 +1273,6 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
 
     // Create errors for discharging point without treatment plant :
     $batch['operations'][]= array('uwwtd_set_errors_dps_without_tp', array($annee));
-
     batch_set($batch);
     batch_process('data/import');
 }
