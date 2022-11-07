@@ -665,7 +665,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
     );
     
-    dpm($datas);
+    //dpm($datas);
     
     //delete all error from previous import
     $batch['operations'][]=array('uwwtd_delete_error', array($annee, 'import'));
@@ -1072,6 +1072,18 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UwwtpAgglos']['Row'];
         }
         uwwtd_trace('imports UwwtpAgglos v10th report');
+        uwwtd_trace(var_export($imports, true));
+        $batch['operations'][]=array('uwwtd_link_uww_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
+    }
+    //11th report
+    elseif(isset($datas['UWWTPAgglos'])){
+        if(isset($datas['UWWTPAgglos']['Row']['aucUwwCode'])){
+            $imports[0] = $datas['UWWTPAgglos']['Row'];
+        }
+        else{
+            $imports = $datas['UWWTPAgglos']['Row'];
+        }
+        uwwtd_trace('imports UWWTPAgglos v11th report');
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_link_uww_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
