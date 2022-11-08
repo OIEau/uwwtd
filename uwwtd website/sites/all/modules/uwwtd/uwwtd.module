@@ -2211,7 +2211,7 @@ function uwwtd_timeline_output($node, $linkOnAllYears=false){
 
 function uwwtd_timeline_receiving_area_output($node){
   $output = '';
-  $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value']);
+  $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value'], 'receiving_area');
   if($histories != false){
     $otherList = array();
     $output .= '<div class="uwwtd-history">';
@@ -2275,6 +2275,8 @@ function uwwtd_timeline_receiving_area_state($node){
             + (isset($node->field_rcandischargedcalculated['und']) ?$node->field_rcandischargedcalculated['und'][0]['value']     :0)
             + (isset($node->field_rcandischargedestimated['und']) ?$node->field_rcandischargedestimated['und'][0]['value']  :0)
         );
+        dpm($nincoming, 'nincoming');
+        dpm($ndischarged, 'ndischarged');
 
         $pincoming   = (
             (isset($node->field_rcapincomingmeasured['und']) ?$node->field_rcapincomingmeasured['und'][0]['value']    :0)

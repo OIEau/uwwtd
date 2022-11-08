@@ -2070,7 +2070,8 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 }   
                 else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot measured information found.', $timestamp, $i, $node);
             
-            }elseif($node->field_rcamethod54['und'][0]['value'] == "Calculated"){
+            }
+            elseif($node->field_rcamethod54['und'][0]['value'] == "Calculated"){
                 //decimal
                 if(isset($data['rcaNIncoming54'])){
                     $check = uwwtd_check_decimal($data['rcaNIncoming54']);
@@ -2114,7 +2115,8 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                     }             
                 }   
                 else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot calculated information found.', $timestamp, $i, $node);
-            }elseif($node->field_rcamethod54['und'][0]['value'] == "Estimated"){
+            }
+            elseif($node->field_rcamethod54['und'][0]['value'] == "Estimated"){
                 //decimal
                 if(isset($data['rcaNIncoming54'])){
                     $check = uwwtd_check_decimal($data['rcaNIncoming54']);
@@ -2259,37 +2261,39 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         // TODO : improve this test
         //9th report
         //TODO e.v -> voir avec b et nd si on doit boucler , si il peux y avoir plusieurs ReceivingAreasSA54:row pour le même rcaCode
-        if(isset($data['ReceivingAreasSA54'])) {
+        if(isset($data['ReceivingAreasSA54']) || isset($data['ReceivingAreas_SA54'])) {
+            if(isset($data['ReceivingAreasSA54'])) $key = 'ReceivingAreasSA54';
+            else $key = 'ReceivingAreas_SA54';
 //             foreach ($data['ReceivingAreasSA54'] as $key => $ReceivingAreasSA54) {  //e.v add foreach ==> todo see where we use the field to sum them all in the processing
-              switch ($data['ReceivingAreasSA54'][0]['rcaMethod54']) {
+              switch ($data[$key][0]['rcaMethod54']) {
               	case 'M':                                          
                     $node->field_rcamethod54['und'][0]['value'] = 'M';  //todo e.v problem here if multiple $key
-              		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
-          			$node->field_rcandischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
-          			$node->field_rcapincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
-          			$node->field_rcapdischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
+              		$node->field_rcanincomingmeasured['und'][0]['value']	= $data[$key][0]['rcaNIncoming54'];
+          			$node->field_rcandischargedmeasured['und'][0]['value']	= $data[$key][0]['rcaNDischarged54'];
+          			$node->field_rcapincomingmeasured['und'][0]['value']	= $data[$key][0]['rcaPIncoming54'];
+          			$node->field_rcapdischargedmeasured['und'][0]['value']	= $data[$key][0]['rcaPDischarged54'];
               		break;
               	case 'C':
                       $node->field_rcamethod54['und'][0]['value'] = 'C';    //todo e.v problem here if multiple $key
-              		$node->field_rcanincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
-          			$node->field_rcandischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
-          			$node->field_rcapincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
-          			$node->field_rcapdischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
+              		$node->field_rcanincomingcalculated['und'][0]['value']	= $data[$key][0]['rcaNIncoming54'];
+          			$node->field_rcandischargedcalculated['und'][0]['value']	= $data[$key][0]['rcaNDischarged54'];
+          			$node->field_rcapincomingcalculated['und'][0]['value']	= $data[$key][0]['rcaPIncoming54'];
+          			$node->field_rcapdischargedcalculated['und'][0]['value']	= $data[$key][0]['rcaPDischarged54'];
               		break;
               	case 'E':
                       $node->field_rcamethod54['und'][0]['value'] = 'E';     //todo e.v problem here if multiple $key
-              		$node->field_rcanincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
-          			$node->field_rcandischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
-          			$node->field_rcapincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
-          			$node->field_rcapdischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
+              		$node->field_rcanincomingestimated['und'][0]['value']	= $data[$key][0]['rcaNIncoming54'];
+          			$node->field_rcandischargedestimated['und'][0]['value']	= $data[$key][0]['rcaNDischarged54'];
+          			$node->field_rcapincomingestimated['und'][0]['value']	= $data[$key][0]['rcaPIncoming54'];
+          			$node->field_rcapdischargedestimated['und'][0]['value']	= $data[$key][0]['rcaPDischarged54'];
               		break;
            		default:
            			break;
               }
 
             //numeric
-            if(isset($data['ReceivingAreasSA54'][0]['rcaPlants54'])){
-              $check = uwwtd_check_numeric($data['ReceivingAreasSA54'][0]['rcaPlants54']);
+            if(isset($data[$key][0]['rcaPlants54'])){
+              $check = uwwtd_check_numeric($data[$key][0]['rcaPlants54']);
               if (false === $check) {
                   uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
               } else {
@@ -2298,8 +2302,8 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }   
             else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area plants information found.', $timestamp, $i, $node);
 
-            if(isset($data['ReceivingAreasSA54'][0]['rcaPlantsCapacity54'])){
-              $check = uwwtd_check_numeric($data['ReceivingAreasSA54'][0]['rcaPlantsCapacity54']);
+            if(isset($data[$key][0]['rcaPlantsCapacity54'])){
+              $check = uwwtd_check_numeric($data[$key][0]['rcaPlantsCapacity54']);
               if (false === $check) {
                   uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
               } else {
@@ -2314,11 +2318,12 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         //10 th report e.v
         //text TODO test avec 0 1 n value
-        if(isset($data['ReceivingAreasSALSAPredecessor'])) { 
-
+        if(isset($data['ReceivingAreasSALSAPredecessor']) || isset($data['ReceivingAreas_SALSAPredecessor'])) { 
+            if(isset($data['ReceivingAreasSA54'])) $key = 'ReceivingAreasSA54';
+            else $key = 'ReceivingAreas_SALSAPredecessor';
           //rcaCodePredecessor
-          if(isset($data['ReceivingAreasSALSAPredecessor'][0]['rcaCodePredecessor'])){
-              foreach ($data['ReceivingAreasSALSAPredecessor'] as $key => $ReceivingAreasSALSAPredecessor) {
+          if(isset($data[$key][0]['rcaCodePredecessor'])){
+              foreach ($data[$key] as $key => $ReceivingAreasSALSAPredecessor) {
                 //multiple value  => todo e.v change field confiuration to accept multiple value !           
                 $node->field_rcacodepredecessor['und'][$key]['value'] = uwwtd_check_text($ReceivingAreasSALSAPredecessor['rcaCodePredecessor']);
               }
@@ -2326,8 +2331,8 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
           else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA id code area found.', $timestamp, $i, $node);
 
           //rcasalsaRemark
-          if(isset($data['ReceivingAreasSALSAPredecessor'][0]['rcasalsaRemark'])){
-              foreach ($data['ReceivingAreasSALSAPredecessor'] as $key => $ReceivingAreasSALSAPredecessor) {
+          if(isset($data[$key][0]['rcasalsaRemark'])){
+              foreach ($data[$key] as $key => $ReceivingAreasSALSAPredecessor) {
                 //multiple value  => todo e.v change field confiuration to accept multiple value !
                 $node->field_rcasalsaremark['und'][$key]['value'] = uwwtd_check_text($ReceivingAreasSALSAPredecessor['rcasalsaRemark']);
               }
@@ -2337,11 +2342,12 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         //10 th report e.v
         //text TODO test avec 0 1 n value
-        if(isset($data['ReceivingAreasSASA'])) { 
-
+        if(isset($data['ReceivingAreasSASA']) || isset($data['ReceivingAreas_SASA'])) { 
+            if(isset($data['ReceivingAreasSASA'])) $key = 'ReceivingAreasSASA';
+            else $key = 'ReceivingAreas_SASA';
           //rcaRelatedSA
-          if(isset($data['ReceivingAreasSASA'][0]['rcaRelatedSA'])){
-              foreach ($data['ReceivingAreasSASA'] as $key => $ReceivingAreasSASA) {
+          if(isset($data[$key][0]['rcaRelatedSA'])){
+              foreach ($data[$key] as $key => $ReceivingAreasSASA) {
                 //multiple value  => todo e.v change field confiuration to accept multiple value !           
                 $node->field_rca_sensitive_area['und'][$key]['value'] = uwwtd_check_text($ReceivingAreasSASA['rcaRelatedSA']);
               }
@@ -2349,8 +2355,8 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
           else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SASA rcaRelatedSA area found.', $timestamp, $i, $node);
 
           //rcaRelatedSARemark
-          if(isset($data['ReceivingAreasSASA'][0]['rcaRelatedSARemark'])){
-              foreach ($data['ReceivingAreasSASA'] as $key => $ReceivingAreasSASA) {
+          if(isset($data[$key][0]['rcaRelatedSARemark'])){
+              foreach ($data[$key] as $key => $ReceivingAreasSASA) {
                 //multiple value  => todo e.v change field confiuration to accept multiple value !
                 $node->field_rcarelatedsaremark['und'][$key]['value'] = uwwtd_check_text($ReceivingAreasSASA['rcaRelatedSARemark']);
               }
