@@ -666,7 +666,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     );
     
     //delete all error from previous import
-    $batch['operations'][]=array('uwwtd_delete_error', array($annee, 'import'));
+    //===========$batch['operations'][]=array('uwwtd_delete_error', array($annee, 'import'));
 
     /*DG 15/12/2015 Add type RCA*/
     /*Fix nd@oieau.fr 09/06/2016 : reprocess the ReceivingAreas import ==> the batch operation not working before*/
@@ -911,7 +911,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
 
     }
-
+/*
 // return 'ok';
     //BigCityDischargers
     $imports  = array();
@@ -1110,28 +1110,12 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     //link_dcp_rca
     $imports  = array();
     if(isset($datas['UWWTD_Report']['DischargePoints'])){
-        /*
-        if(isset($datas['UWWTD_Report']['DischargePoints']['DischargePoint']['dcpCode'])){
-            $imports[0] = $datas['UWWTD_Report']['DischargePoints'];
-        }
-        else{
-            $imports = $datas['UWWTD_Report']['DischargePoints']['DischargePoint'];
-        }
-        $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $imports, $timestamp));
-        */
+
         $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $timestamp));
     }
     //10th report
     elseif(isset($datas['DischargePoints'])){
-        /*
-        if(isset($datas['DischargePoints']['DischargePoint']['dcpCode'])){
-            $imports[0] = $datas['UWWTD_Report']['DischargePoints'];
-        }
-        else{
-            $imports = $datas['DischargePoints']['DischargePoint'];
-        }
-        $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $imports, $timestamp));
-        */
+
         $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $timestamp));
     }
    //UwwtpAgglos
@@ -1273,6 +1257,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
 
     // Create errors for discharging point without treatment plant :
     $batch['operations'][]= array('uwwtd_set_errors_dps_without_tp', array($annee));
+    */
     batch_set($batch);
     batch_process('data/import');
 }
@@ -1401,7 +1386,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         // data mapping
         $node->field_repcode['und'][0]['value'] = $repCode;
         
-        /* DG 15/12/2015 add rcaEnvDom for RCA LSA, RCA SA MAIN*/
+        // DG 15/12/2015 add rcaEnvDom for RCA LSA, RCA SA MAIN
         //text
         if(isset($data['rcaEnvDom'])){
             $node->field_rcaenvdom['und'][0]['value'] = uwwtd_check_text($data['rcaEnvDom']);}
@@ -1432,7 +1417,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         //text
         $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['rcaCode']);
 
-        /* DG 15/12/2015 add rcaSpZTyp for RCA LSA, RCA SA MAIN*/
+        // DG 15/12/2015 add rcaSpZTyp for RCA LSA, RCA SA MAIN
         //text
         if(isset($data['rcaType']) || isset($data['rcaSpZTyp'])){
             if(isset($data['rcaType'])){
@@ -1443,7 +1428,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area specialised zone type found.', $timestamp, $i, $node);
         
-        /* DG 15/12/2015 add rcaZtype for RCA SA MAIN, RCA LSA*/
+        // DG 15/12/2015 add rcaZtype for RCA SA MAIN, RCA LSA
         //text
         if(isset($data['rcaZtype'])){
             $node->field_zonetype['und'][0]['value'] = uwwtd_check_text($data['rcaZtype']);
