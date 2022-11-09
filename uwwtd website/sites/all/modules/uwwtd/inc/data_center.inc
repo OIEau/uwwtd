@@ -911,7 +911,6 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
 
     }
-/*
 // return 'ok';
     //BigCityDischargers
     $imports  = array();
@@ -1257,7 +1256,6 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
 
     // Create errors for discharging point without treatment plant :
     $batch['operations'][]= array('uwwtd_set_errors_dps_without_tp', array($annee));
-    */
     batch_set($batch);
     batch_process('data/import');
 }
