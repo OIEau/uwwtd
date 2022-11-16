@@ -9815,7 +9815,7 @@ function uwwtd_get_required_treatment_sa_or_a58(&$required_treatment, $dcp, $max
 {
     uwwtd_trace(__FUNCTION__);
     // dsm(func_get_args());
-    if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen < 10000){
+    if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen <= 10000){
         $required_treatment->required = 'Appropriate';
     } elseif (($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') && $maxgen <= 10000 ) {
         $required_treatment->required = 'S';
