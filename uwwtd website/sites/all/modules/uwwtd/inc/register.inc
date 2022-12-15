@@ -75,7 +75,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){
-
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -146,12 +145,12 @@ function uwwtd_register_set_operation(&$batch, $annee){
 
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-    
+   
     //Debug
     //$batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
     //$batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));   
     //$batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee)); 
-    
+    //$batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -10991,9 +10990,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 AND f_annee.field_anneedata_value = :annee
                 AND s.field_status_value = '1'
                 AND f_agggenerated.field_agggenerated_value >= 2000
+                
             GROUP BY n.nid
             ORDER BY agggenerated desc NULLS LAST;
         ";        
+        //AND n.nid IN ('254823', '255147')
         //AND agg.field_uwwaggliste_nid = 238941
         $param = array(
             ':typenode' => 'uwwtp',
@@ -11812,7 +11813,13 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     $art4_final = 'C';
                 }
             }
-
+            /*
+            dpm($uwwtp->title);
+            dpm($art4_final, 'art4_final');
+            dpm($art4_treatment_type, 'art4_treatment_type');
+            dpm($art4_monitoring, 'art4_monitoring');
+            dpm($uwwtp_compliance , 'uwwtp_compliance');
+            */
             //compliance Art. 5   //more stringent treatment in place
             //'treatment type',
             $art5_treatment = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
@@ -12232,7 +12239,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //debug value
             $line[$ind['debug_pending_or_expired']] = $pending_or_expired;
             $line[$ind['debug_art4_final']] = $art4_final;
-
+            //dpm($ind);
+            //dpm($line);
             fputcsv($r, $line, ';');
             
             foreach ($listtypestat as $typestat) {

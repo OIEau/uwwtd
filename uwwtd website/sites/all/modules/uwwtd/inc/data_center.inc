@@ -7477,7 +7477,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
        return $aResult;          
     }
     
-    //treatement required = tertiary && treatement in place = NI (not provided on treatement inplace)
+    //treatement required = MS && treatement in place = NI (not provided on treatement inplace)
     if (true === in_array($uwwtp->field_uwwtreatmentrequired['und'][0]['value'],array(
                             $GLOBALS['uwwtd_value']['required']['morestringent'],
                             $GLOBALS['uwwtd_value']['required']['nitrogen'],
@@ -7506,38 +7506,115 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
        return $aResult;          
     }    
     
-    //cod and bod5 pass
-//     if(true === uwwtd_codperf_pass($uwwtp) && true === uwwtd_bod5perf_pass($uwwtp)){
-    if (true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('codperf', 'bod5perf'))) {
-        if ($uwwtp->field_uwwcompliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']) {
-            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
-            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];            
-        } else {
-           if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
-            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
-           } else {
-            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
-            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
-           }              
-        }
-//         uwwtd_trace(__LINE__);
-        return $aResult;   
-    }
+    //default case == treatment require = MS
     
-    //cod and bod5 not pass
-   if (false === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-    $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline']; 
-    $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
-   } else {
-       if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+    //ART 4 : cod and bod5 pass
+//     if(true === uwwtd_codperf_pass($uwwtp) && true === uwwtd_bod5perf_pass($uwwtp)){
+    //==============2022-12-02=========================== these cases are only used for SE case : use only performance and not equipement
+    //ART 4
+    if ($uwwtp->field_uwwcompliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']) {
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];      
+    } 
+    else {
+       if ($conf['siif_eru_country_code']=='se' && true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('codperf', 'bod5perf'))) {
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];  
+        }
+        elseif (
+            in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], [
+                    $GLOBALS['uwwtd_value']['inplace']['secondary'],
+                    $GLOBALS['uwwtd_value']['inplace']['nitrogen'],
+                    $GLOBALS['uwwtd_value']['inplace']['phosphorus'],
+                    $GLOBALS['uwwtd_value']['inplace']['other'],
+                    $GLOBALS['uwwtd_value']['inplace']['nitrogen_phosphorus'],
+                    $GLOBALS['uwwtd_value']['inplace']['morestringent'] ]) 
+            && true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('codperf', 'bod5perf'))) {
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];  
+        }
+       elseif (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
-        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
        } else {
-        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
-       } 
-   } 
+        return $aResult;
+       }              
+    }
+        
+        //ART 5
+        if ( in_array($uwwtp->field_uwwtreatmentrequired['und'][0]['value'], [$GLOBALS['uwwtd_value']['required']['morestringent'],$GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'], $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus_other']]) ){
+            if ($conf['siif_eru_country_code']=='se' && true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ntotperf', 'ptotperf'))) {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];      
+            }
+            elseif ( 
+                in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], [$GLOBALS['uwwtd_value']['inplace']['morestringent'], $GLOBALS['uwwtd_value']['inplace']['nitrogen_phosphorus']]) 
+                && true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ntotperf', 'ptotperf'))
+            ) {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];      
+            }
+            else {
+               if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+               } 
+               else {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+               } 
+        }}
+        elseif (in_array($uwwtp->field_uwwtreatmentrequired['und'][0]['value'], [$GLOBALS['uwwtd_value']['required']['nitrogen'], $GLOBALS['uwwtd_value']['required']['nitrogen_other']])  ){
+            if ($conf['siif_eru_country_code']=='se' && true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ntotperf'))) {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];      
+            }
+            elseif (
+                in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], [
+                    $GLOBALS['uwwtd_value']['inplace']['morestringent'], 
+                    $GLOBALS['uwwtd_value']['inplace']['nitrogen_phosphorus'], 
+                    $GLOBALS['uwwtd_value']['inplace']['nitrogen'],
+                ]) 
+                && true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ntotperf'))) {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];      
+            }
+            else {
+               if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+               } else {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+               } 
+        }}
+        elseif (in_array($uwwtp->field_uwwtreatmentrequired['und'][0]['value'], [$GLOBALS['uwwtd_value']['required']['phosphorus'], $GLOBALS['uwwtd_value']['required']['phosphorus_other']])){
+            if ($conf['siif_eru_country_code']=='se' && true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ptotperf'))) {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];      
+            }
+            elseif (
+                in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], [
+                    $GLOBALS['uwwtd_value']['inplace']['morestringent'], 
+                    $GLOBALS['uwwtd_value']['inplace']['nitrogen_phosphorus'], 
+                    $GLOBALS['uwwtd_value']['inplace']['phosphorus'],
+                ]) 
+                && true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ptotperf'))
+            ) {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];      
+            }
+            else {
+               if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+               } else {
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+               } 
+        }}
+        else{   
+            if (false === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline']; 
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+           } else {
+               if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+                $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+               } else {
+                $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+               }
+           }
+        }
+    
+
 //    uwwtd_trace(__LINE__);
    return $aResult;   
 }
