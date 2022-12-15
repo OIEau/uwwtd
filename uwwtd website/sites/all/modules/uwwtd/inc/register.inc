@@ -5514,14 +5514,13 @@ function uwwtd_create_register_2022_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('G7', uwwtd_register_get_cell_value($previoussheet_n2, 'C7'));
     
     //previous_n3 ====> need to reindex column name
-    /*
-    $sheet->setCellValue('F5', uwwtd_register_get_cell_value($previoussheet_n3, 'B5'));
-    $sheet->setCellValue('G5', uwwtd_register_get_cell_value($previoussheet_n3, 'C5'));
-    $sheet->setCellValue('F6', uwwtd_register_get_cell_value($previoussheet_n3, 'B6'));
-    $sheet->setCellValue('G6', uwwtd_register_get_cell_value($previoussheet_n3, 'C6'));
-    $sheet->setCellValue('F7', uwwtd_register_get_cell_value($previoussheet_n3, 'B7'));
-    $sheet->setCellValue('G7', uwwtd_register_get_cell_value($previoussheet_n3, 'C7'));
-    */
+    $sheet->setCellValue('H5', uwwtd_register_get_cell_value($previoussheet_n3, 'B5'));
+    $sheet->setCellValue('I5', uwwtd_register_get_cell_value($previoussheet_n3, 'C5'));
+    $sheet->setCellValue('H6', uwwtd_register_get_cell_value($previoussheet_n3, 'B6'));
+    $sheet->setCellValue('I6', uwwtd_register_get_cell_value($previoussheet_n3, 'C6'));
+    $sheet->setCellValue('H7', uwwtd_register_get_cell_value($previoussheet_n3, 'B7'));
+    $sheet->setCellValue('I7', uwwtd_register_get_cell_value($previoussheet_n3, 'C7'));
+    
     //=============================================================array2
     if (isset($context['results']['graph']['total_generated']['pe'])) {
     	$sheet->setCellValue('B15', round($context['results']['graph']['total_generated']['pe'], 0));
