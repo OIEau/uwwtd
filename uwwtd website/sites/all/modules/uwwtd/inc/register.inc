@@ -145,7 +145,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
 
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-   
+
     //Debug
     //$batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
     //$batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));   
@@ -12605,7 +12605,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 AND f_annee.field_anneedata_value = :annee
                 AND s.field_status_value = '1'
                 AND f_agggenerated.field_agggenerated_value >= 2000
-                
             GROUP BY n.nid
             ORDER BY agggenerated desc NULLS LAST;
         ";        
@@ -13230,6 +13229,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                         $startingDateOfApplication_an = '';
                       } 
                       $startingDateOfApplication_an .= ($startingDateOfApplication_an == '' ? '' : ';') . uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value']);
+                      $rca_startingDateOfApplication_an = $rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value'];
                     }    
 //                     $startingDateOfApplication_an = ($rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value']) : '-');
 
@@ -13238,6 +13238,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                         $startingDateOfApplication_ap = '';
                       } 
                       $startingDateOfApplication_ap .= ($startingDateOfApplication_ap == '' ? '' : ';') . uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value']);
+                      $rca_startingDateOfApplication_ap = $rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value'];
                     } 
 //                     $startingDateOfApplication_ap = ($rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value']) : '-');
 
@@ -13305,14 +13306,15 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             //UWWTP treatment and performance
             //'treatment required',
-            $treatment_required = uwwtd_get_register_treatment_required_with_deadline(
+            $treatment_required = uwwtd_get_register_treatment_required_with_deadline( 
                 $uwwtp->field_uwwtreatmentrequired['und'][0]['value'],
                 substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10),
                 substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10),
                 substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10),
+                substr($rca_startingDateOfApplication_an),
+                substr($rca_startingDateOfApplication_ap),
                 $annee
             );
-
 
             $line[$ind['treatment required']] = $treatment_required;//$uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
 
@@ -13323,6 +13325,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10),
                     substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10),
                     substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10),
+                    null,
+                    null,
                     $previous_reference_year
                 );
             }
@@ -15241,12 +15245,19 @@ function uwwtd_get_register_treatment_required($required_calculated) {
     return $treatment_required;
 }
 
-function uwwtd_get_register_treatment_required_with_deadline($required_calculated, $deadlineart3, $deadlineart4, $deadlineart5, $referenceyear) {
+function uwwtd_get_register_treatment_required_with_deadline($required_calculated, $deadlineart3, $deadlineart4, $deadlineart5, $deadlineart5_rca_an, $deadlineart5_rca_ap, $referenceyear) {
     $deadline_over_art3 = deadline_beforeorequal_to_referenceyear($deadlineart3, $referenceyear);
     $deadline_over_art4 = deadline_beforeorequal_to_referenceyear($deadlineart4, $referenceyear);
     $deadline_over_art5 = deadline_beforeorequal_to_referenceyear($deadlineart5, $referenceyear);
+    if($deadlineart5_rca_an){
+        $deadline_over_art5_rca_an = deadline_beforeorequal_to_referenceyear($deadlineart5_rca_an, $referenceyear);
+    }else{ $deadline_over_art5_rca_an =null;} 
+    if($deadlineart5_rca_ap){
+        $deadline_over_art5_rca_ap = deadline_beforeorequal_to_referenceyear($deadlineart5_rca_ap, $referenceyear);
+    } else{ $deadline_over_art5_rca_ap =null;} 
+    
     $treatment_required = '';
-
+//FIX ME
     switch($required_calculated) {
         case 'S':
             $treatment_required = '2';
@@ -15254,6 +15265,7 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
         case 'N':
             if ($deadlineart5 == false) {
                 $treatment_required = '2';
+                if($deadline_over_art5_rca_an == true) $treatment_required = '3N';
             } else {
                 $treatment_required = '3N';
             }
@@ -15261,6 +15273,8 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
         case 'NP':
             if ($deadlineart5 == false) {
                 $treatment_required = '2';
+                if($deadline_over_art5_rca_an == true) $treatment_required = '3N';
+                if($deadline_over_art5_rca_ap == true) $treatment_required = '3P';
             } else {
                 $treatment_required = '3NP';
             }
@@ -15268,6 +15282,7 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
         case 'P':
             if ($deadlineart5 == false) {
                 $treatment_required = '2';
+                if($deadline_over_art5_rca_ap == true) $treatment_required = '3P';
             } else {
                 $treatment_required = '3P';
             }
@@ -15275,6 +15290,7 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
         case 'MP':
             if ($deadlineart5 == false) {
                 $treatment_required = '2';
+                if($deadline_over_art5_rca_ap == true) $treatment_required = '3P';
             } else {
                 $treatment_required = '3P';
             }
@@ -15282,6 +15298,9 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
         case 'NPO':
             if ($deadlineart5 == false) {
                 $treatment_required = '2';
+                if($deadline_over_art5_rca_an == true  && $deadline_over_art5_rca_ap == true) $treatment_required = '3NP';
+                elseif($deadline_over_art5_rca_an == true) $treatment_required = '3N';
+                elseif($deadline_over_art5_rca_ap == true) $treatment_required = '3P';
             } else {
                 $treatment_required = '3NPother';
             }
@@ -15289,6 +15308,7 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
         case 'NO':
             if ($deadlineart5 == false) {
                 $treatment_required = '2';
+                if($deadline_over_art5_rca_an == true) $treatment_required = '3N';
             } else {
                 $treatment_required = '3Nother';
             }
@@ -15296,6 +15316,7 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
         case 'PO':
             if ($deadlineart5 == false) {
                 $treatment_required = '2';
+                if($deadline_over_art5_rca_ap == true) $treatment_required = '3P';
             } else {
                 $treatment_required = '3Pother';
             }
