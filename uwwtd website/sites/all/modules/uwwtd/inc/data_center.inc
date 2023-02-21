@@ -10082,6 +10082,8 @@ function uwwtd_get_required_treatment_sa_or_a58(&$required_treatment, $dcp, $max
 function uwwtd_get_required_treatment_csa(&$required_treatment, $dcp, $maxgen)
 {
     uwwtd_trace(__FUNCTION__);
+	//dsm($maxgen);
+	//dsm($dcp);
     if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen <= 10000){
         $required_treatment->required = 'Appropriate';
     } elseif (($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') && $maxgen <= 10000 ) {
@@ -10122,7 +10124,7 @@ function uwwtd_get_required_treatment_csa(&$required_treatment, $dcp, $maxgen)
             } else {
                 //if rca demands phosphorus rcaAPhos
                 // Nota: The case where receiving area demands criterion c (other treatment) is not considered/listed here, because according to the document "UWWTD legal compliance assessment methodology document - Final version from 20 June 2014" (page 10) compliance with Article 5 under criterion c is only assessed for SA, but not for CSA.  Hence if CSA demands criterion c only, the required treatment is only secondary
-                if ($dcp['rcaap']) {  
+                if ($dcp['rcaap'] || $dcp['paramP']) {  
                     $required_treatment->required = 'MP';
                     $required_treatment->required_rcaan = 0;
                     $required_treatment->required_rcaap = 1;
