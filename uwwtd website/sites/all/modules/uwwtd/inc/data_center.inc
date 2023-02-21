@@ -8229,7 +8229,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                     $hasParamO      = (isset($rca->field_rca_parameter_other['und']) ? $rca->field_rca_parameter_other['und'][0]['value'] == 1: false);
 
                     $zonetypeIsSet = (isset($rca->field_zonetype['und'][0]['value']) ? $rca->field_zonetype['und'][0]['value'] : false);
-                    if (isset($rca->field_specialisedzonetype['und'][0]['value'])) {
+                    if (isset($rca->field_specialisedzonetype['und'][0]['value']) && $rcaTypeid !='CSA') {
                         $rcaTypeid = $rca->field_specialisedzonetype['und'][0]['value'];
                     }
                     //nd@oieau.fr :  11/06/2021 : Special rule ask by Benilde. In 2018, rule Art 5.2,3 have to be applied for France. Art 5.4 is not applicable for compliance assessement
@@ -8237,7 +8237,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                         $rcaTypeid = 'A523';
                     }
                     if($isrca54applied) $rca54applied = true;
-                    
                     
                     if($isrcaANitro){
                         if(isset($rca->field_rcaanstartdate['und'])){
@@ -10082,8 +10081,6 @@ function uwwtd_get_required_treatment_sa_or_a58(&$required_treatment, $dcp, $max
 function uwwtd_get_required_treatment_csa(&$required_treatment, $dcp, $maxgen)
 {
     uwwtd_trace(__FUNCTION__);
-	//dsm($maxgen);
-	//dsm($dcp);
     if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen <= 10000){
         $required_treatment->required = 'Appropriate';
     } elseif (($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') && $maxgen <= 10000 ) {
