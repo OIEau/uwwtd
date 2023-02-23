@@ -14409,8 +14409,8 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['related_sensitive_area_(2)'] => $field_rca_sensitive_area, //($rca[$i]->field_specialisedzonetype['und'][0]['value'] != 'CSA' ? '' : $rca[$i]->field_rca_sensitive_area['und'][0]['value']),
             //'Remark Related sensitive area (2)', //;   ?
             $ind['remark_related_sensitive_area_(2)'] => $field_rcarelatedsaremark, //$rca[$i]->field_rcarelatedsaremark['und'][0]['value'],
-            $ind['nb_agg']  => count($rca[$i]->field_linked_agglomerations['und']),
-            $ind['nb_agg_agggenerated']  => count(), //=============get total agggenerated
+            $ind['nb_agg']  => count((array)$rca[$i]->field_linked_agglomerations['und']),
+            $ind['nb_agg_agggenerated']  =>0, //=============get total agggenerated
         );
         if(!empty($rca[$i]->field_linked_agglomerations['und'])){
             $nids = array_column($rca[$i]->field_linked_agglomerations['und'], 'nid');

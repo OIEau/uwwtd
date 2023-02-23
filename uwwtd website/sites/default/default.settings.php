@@ -747,21 +747,6 @@ $conf['mail_display_name_site_name'] = TRUE;
 # $conf['samesite_cookie_value'] = 'None';
 
 /**
- * Add Permissions-Policy header to disable Google FLoC.
- *
- * By default, Drupal sends the 'Permissions-Policy: interest-cohort=()' header
- * to disable Google's Federated Learning of Cohorts feature, introduced in
- * Chrome 89.
- *
- * See https://en.wikipedia.org/wiki/Federated_Learning_of_Cohorts for more
- * information about FLoC.
- *
- * If you don't wish to disable FLoC in Chrome, you can set this value
- * to FALSE.
- */
-# $conf['block_interest_cohort'] = TRUE;
-
-/**
  * Retain legacy has_js cookie.
  *
  * Older releases of Drupal set a has_js cookie with a boolean value which
@@ -805,3 +790,31 @@ $conf['mail_display_name_site_name'] = TRUE;
  * access to all files within that scheme.
  */
 # $conf['file_additional_public_schemes'] = array('example');
+
+/**
+ * Sensitive request headers in drupal_http_request() when following a redirect.
+ *
+ * By default drupal_http_request() will strip sensitive request headers when
+ * following a redirect if the redirect location has a different http host to
+ * the original request, or if the scheme downgrades from https to http.
+ *
+ * These variables allow opting out of this behaviour. Careful consideration of
+ * the security implications of opting out is recommended.
+ *
+ * @see _drupal_should_strip_sensitive_headers_on_http_redirect()
+ * @see drupal_http_request()
+ */
+# $conf['drupal_http_request_strip_sensitive_headers_on_host_change'] = TRUE;
+# $conf['drupal_http_request_strip_sensitive_headers_on_https_downgrade'] = TRUE;
+
+/**
+ * Cron lock expiration timeout:
+ *
+ * Each time Drupal's cron is executed, it acquires a cron lock. Older releases
+ * of Drupal set the default cron lock expiration timeout to 240 seconds. This
+ * duration was considered short, because it often caused concurrent cron runs
+ * especially on busy sites heavily utilizing cron.
+ *
+ * Use this variable to set a custom cron lock expiration timeout (float).
+ */
+# $conf['cron_lock_expiration_timeout'] = 900.0;
