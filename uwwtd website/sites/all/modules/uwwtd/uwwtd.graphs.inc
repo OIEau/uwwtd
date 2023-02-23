@@ -1010,7 +1010,7 @@ function getRow6Graphs($results){
                             (string)$key,
                             uwwtd_format_number($item['in']['q']),
                             uwwtd_format_number($item['out']['q']),
-                            $item['in'] ? uwwtd_format_number(($item['in']['q']- $item['out']['q'])*100/$item['in']['q'] ,1) .'%':'-'
+                            $item['in']['q'] > 0 ? uwwtd_format_number(($item['in']['q']- $item['out']['q'])*100/$item['in']['q'] ,1) .'%':'-'
                         );
                         
                         // BB - 26/10/16
