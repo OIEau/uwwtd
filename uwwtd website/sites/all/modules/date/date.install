@@ -297,13 +297,11 @@ function date_update_7007() {
     foreach (array_intersect_key($field['columns'], drupal_map_assoc(array('value', 'value2'))) as $column_name => $schema) {
       $schema['size'] = 'big';
       $column = $field_name . '_' . $column_name;
-      if($field_name !='field_rcadateexported'){
-          if (db_table_exists('field_data_' . $field_name)) {
-            db_change_field('field_data_' . $field_name, $column, $column, $schema);
-          }
-          if (db_table_exists('field_revision_' . $field_name)) {
-            db_change_field('field_revision_' . $field_name, $column, $column, $schema);
-          }
+      if (db_table_exists('field_data_' . $field_name)) {
+        db_change_field('field_data_' . $field_name, $column, $column, $schema);
+      }
+      if (db_table_exists('field_revision_' . $field_name)) {
+        db_change_field('field_revision_' . $field_name, $column, $column, $schema);
       }
     }
   }

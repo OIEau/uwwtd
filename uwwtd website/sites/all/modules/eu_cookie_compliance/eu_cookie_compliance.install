@@ -87,10 +87,23 @@ function eu_cookie_compliance_install() {
  * Implements hook_uninstall().
  */
 function eu_cookie_compliance_uninstall() {
+  module_load_include('module', 'i18n_variable', 'i18n_variable');
+  module_load_include('module', 'variable_realm', 'variable_realm');
+
   variable_del('eu_cookie_compliance');
   variable_del('eu_cookie_compliance_cookie_lifetime');
   variable_del('eu_cookie_compliance_domain');
   variable_del('eu_cookie_compliance_domain_all_sites');
+  variable_del('eu_cookie_compliance_categories');
+
+  $languages = language_list();
+  $variable_names = array('eu_cookie_compliance', 'eu_cookie_compliance_categories');
+  foreach ($variable_names as $variable) {
+    foreach ($languages as $langcode => $language) {
+      i18n_variable_del($variable, $langcode);
+    }
+  }
+
   cache_clear_all('variables', 'cache');
 }
 
@@ -99,6 +112,7 @@ function eu_cookie_compliance_uninstall() {
  */
 function eu_cookie_compliance_requirements($phase) {
   $requirements = array();
+  $t = get_t();
 
   if ($phase === 'runtime') {
     module_load_include('module', 'eu_cookie_compliance', 'eu_cookie_compliance');
@@ -106,10 +120,10 @@ function eu_cookie_compliance_requirements($phase) {
 
     if (!empty($settings['popup_link']) && $settings['popup_link'] === '<front>' && !empty($settings['show_disagree_button']) && $settings['show_disagree_button']) {
       $requirements['eu_cookie_compliance'] = array(
-        'title' => t('EU Cookie Compliance'),
+        'title' => $t('EU Cookie Compliance'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('Your privacy policy link is pointing at the front page. This is the default value after installation, and unless your privacy policy is actually posted at the front page, you will need to create a separate page for the privacy policy and link to that page.'),
-        'value' => t('Privacy Policy link not provided'),
+        'description' => $t('Your privacy policy link is pointing at the front page. This is the default value after installation, and unless your privacy policy is actually posted at the front page, you will need to create a separate page for the privacy policy and link to that page.'),
+        'value' => $t('Privacy Policy link not provided'),
       );
     }
   }
@@ -117,9 +131,12 @@ function eu_cookie_compliance_requirements($phase) {
   return $requirements;
 }
 
+/**
+ * Set module weight.
+ */
 function eu_cookie_compliance_module_set_weight() {
   if (module_exists('jquery_update')) {
-    // @TODO: Document why this weight change is needed. Add a test.
+    // @todo Document why this weight change is needed. Add a test.
     // Get the weight of the jquery update module.
     $result = db_select('system', 's')
       ->fields('s', array('weight'))
@@ -186,6 +203,9 @@ function _eu_cookie_compliance_get_popup_default_setting() {
     'better_support_for_screen_readers' => 0,
     'cookie_categories' => '',
     'cookie_name' => '',
+    'cookie_value_disagreed' => '0',
+    'cookie_value_agreed_show_thank_you' => '1',
+    'cookie_value_agreed' => '2',
     'disagree_button_label' => 'No, thanks',
     'disagree_do_not_show_popup' => 0,
     'domains_list' => '',
@@ -220,6 +240,10 @@ function _eu_cookie_compliance_get_popup_default_setting() {
     'allowed_cookies' => '',
     'withdraw_button_on_info_popup' => 0,
     'containing_element' => 'body',
+    'close_button_enabled' => 0,
+    'close_button_action' => 'close_banner',
+    'reject_button_enabled' => 0,
+    'reject_button_label' => '',
   );
 }
 
@@ -308,7 +332,7 @@ function eu_cookie_compliance_update_7002() {
 }
 
 /**
- * Clear cache for only the settings of this module, to initialize new module settings.
+ * Clear cache for the settings of this module, to initialize new settings.
  */
 function eu_cookie_compliance_update_7003() {
   module_load_include('module', 'eu_cookie_compliance', 'eu_cookie_compliance');
@@ -546,7 +570,7 @@ function eu_cookie_compliance_update_7013() {
       if (array_key_exists('eu_cookie_compliance', $all_domain_settings)) {
         $key = 'eu_cookie_compliance';
       }
-      else if (array_key_exists('eu_cookie_compliance_' . language_default('language'), $all_domain_settings)) {
+      elseif (array_key_exists('eu_cookie_compliance_' . language_default('language'), $all_domain_settings)) {
         $key = 'eu_cookie_compliance_' . language_default('language');
       }
       if ($key) {
@@ -638,6 +662,7 @@ function eu_cookie_compliance_update_7016() {
  * Migrate categories from string to array.
  */
 function eu_cookie_compliance_update_7017() {
+  module_load_include('module', 'eu_cookie_compliance', 'eu_cookie_compliance');
   $settings = variable_get('eu_cookie_compliance', array());
   $categories = $settings['cookie_categories'];
 
@@ -658,7 +683,7 @@ function eu_cookie_compliance_update_7017() {
   if (module_exists('i18n_variable')) {
     $languages = language_list();
     foreach (array_keys($languages) as $langcode) {
-      $settings = i18n_variable_get('eu_cookie_compliance', $langcode, array());
+      $settings = variable_realm_get('language', $langcode, 'eu_cookie_compliance', array());
       $categories = $settings['cookie_categories'];
 
       if (!is_array($categories)) {
@@ -668,12 +693,12 @@ function eu_cookie_compliance_update_7017() {
       }
 
       // Store categories in a new variable.
-      i18n_variable_set('eu_cookie_compliance_categories', $categories, $langcode);
+      variable_realm_set('language', $langcode, 'eu_cookie_compliance_categories', $categories, FALSE);
 
       // Remove legacy values from main variable.
       unset($settings['cookie_categories']);
       unset($settings['fix_first_cookie_category']);
-      i18n_variable_set('eu_cookie_compliance', $settings, $langcode);
+      variable_realm_set('language', $langcode, 'eu_cookie_compliance', $settings, FALSE);
     }
   }
 
@@ -708,21 +733,82 @@ function eu_cookie_compliance_update_7017() {
 function eu_cookie_compliance_update_7018() {
   $eu_cookie_settings = variable_get('eu_cookie_compliance', array());
   // No option to disable given before, so the default is TRUE.
-  $eu_cookie_settings['automatic_cookies_removal'] = TRUE;
-  variable_set('eu_cookie_compliance', $eu_cookie_settings);
+  $new_settings = array(
+    'automatic_cookies_removal' => TRUE,
+  );
+
+  variable_set('eu_cookie_compliance', $eu_cookie_settings + $new_settings);
+
+  if (module_exists('i18n_variable')) {
+    $languages = language_list();
+    foreach (array_keys($languages) as $langcode) {
+      $settings = i18n_variable_get('eu_cookie_compliance', $langcode);
+      if (!empty($settings)) {
+        $updated_setting = $settings + $new_settings;
+        variable_realm_set('language', $langcode, 'eu_cookie_compliance', $updated_setting, FALSE);
+      }
+    }
+  }
+
+  // Set configuration variables for all domains.
+  if (module_exists('domain_settings') && module_exists('domain_conf')) {
+    $domains = domain_domains();
+    foreach ($domains as $domain_data) {
+      $domain_id = $domain_data['domain_id'];
+      $settings = domain_conf_variable_get($domain_id, 'eu_cookie_compliance');
+      $updated_settings = $settings + $new_settings;
+      domain_conf_variable_save($domain_id, 'eu_cookie_compliance', $updated_settings);
+    }
+  }
+}
+
+/**
+ * Add config variables for cookie values.
+ */
+function eu_cookie_compliance_update_7019() {
+  $eu_cookie_settings = variable_get('eu_cookie_compliance', array());
+  $new_settings = array(
+    'cookie_value_disagreed' => '0',
+    'cookie_value_agreed_show_thank_you' => '1',
+    'cookie_value_agreed' => '2',
+  );
+  variable_set('eu_cookie_compliance', $eu_cookie_settings + $new_settings);
+
+  if (module_exists('i18n_variable')) {
+    $languages = language_list();
+    foreach (array_keys($languages) as $langcode) {
+      $settings = i18n_variable_get('eu_cookie_compliance', $langcode);
+      if (!empty($settings)) {
+        $updated_setting = $settings + $new_settings;
+        variable_realm_set('language', $langcode, 'eu_cookie_compliance', $updated_setting, FALSE);
+      }
+    }
+  }
+
+  // Set configuration variables for all domains.
+  if (module_exists('domain_settings') && module_exists('domain_conf')) {
+    $domains = domain_domains();
+    foreach ($domains as $domain_data) {
+      $domain_id = $domain_data['domain_id'];
+      $settings = domain_conf_variable_get($domain_id, 'eu_cookie_compliance');
+      $updated_settings = $settings + $new_settings;
+      domain_conf_variable_save($domain_id, 'eu_cookie_compliance', $updated_settings);
+    }
+  }
 }
 
 /**
  * Transform string based categories into array based ones.
  *
- * @param $categories
+ * @param array $categories
  *   The array of categories to transform.
- * @param $settings
+ * @param array $settings
  *   The full configuration settings.
  *
  * @return array
+ *   Transformed string.
  */
-function _migrate_cookie_categories_to_separate_structure($categories, $settings) {
+function _migrate_cookie_categories_to_separate_structure(array $categories, array $settings) {
   if (count($categories)) {
     $i = 0;
     // Add default values for new attributes like weight.
@@ -741,4 +827,40 @@ function _migrate_cookie_categories_to_separate_structure($categories, $settings
     }
   }
   return $categories;
+}
+
+/**
+ * Add defaults for reject button.
+ */
+function eu_cookie_compliance_update_7020() {
+  $eu_cookie_settings = variable_get('eu_cookie_compliance', array());
+  $new_settings = array(
+    'close_button_enabled' => FALSE,
+    'close_button_action' => 'close_banner',
+    'reject_button_enabled' => FALSE,
+    'reject_button_label' => '',
+  );
+  variable_set('eu_cookie_compliance', $eu_cookie_settings + $new_settings);
+
+  if (module_exists('i18n_variable')) {
+    $languages = language_list();
+    foreach (array_keys($languages) as $langcode) {
+      $settings = i18n_variable_get('eu_cookie_compliance', $langcode);
+      if (!empty($settings)) {
+        $updated_setting = $settings + $new_settings;
+        variable_realm_set('language', $langcode, 'eu_cookie_compliance', $updated_setting, FALSE);
+      }
+    }
+  }
+
+  // Set configuration variables for all domains.
+  if (module_exists('domain_settings') && module_exists('domain_conf')) {
+    $domains = domain_domains();
+    foreach ($domains as $domain_data) {
+      $domain_id = $domain_data['domain_id'];
+      $settings = domain_conf_variable_get($domain_id, 'eu_cookie_compliance');
+      $updated_settings = $settings + $new_settings;
+      domain_conf_variable_save($domain_id, 'eu_cookie_compliance', $updated_settings);
+    }
+  }
 }

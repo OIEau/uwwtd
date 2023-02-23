@@ -29,13 +29,13 @@ function eu_cookie_compliance_admin_categories_form(array $form, array $form_sta
 
   foreach ($categories as $machine_name => $category) {
     $form['categories'][$machine_name]['label'] = array(
-      '#markup' => check_plain($category['label']),
+      '#markup' => filter_xss($category['label']),
     );
     $form['categories'][$machine_name]['machine_name'] = array(
       '#markup' => check_plain($machine_name),
     );
     $form['categories'][$machine_name]['description'] = array(
-      '#markup' => check_plain($category['description']),
+      '#markup' => filter_xss($category['description']),
     );
     $form['categories'][$machine_name]['checkbox_default_state'] = array(
       '#markup' => isset($options_list[$category['checkbox_default_state']]) ? $options_list[$category['checkbox_default_state']] : $options_list['unchecked'],
@@ -59,9 +59,9 @@ function eu_cookie_compliance_admin_categories_form(array $form, array $form_sta
     }
     $form['categories'][$machine_name]['op'] = array(
       '#markup' =>
-        l(t('Edit'), '/admin/config/system/eu-cookie-compliance/categories/' . check_plain($machine_name) . '/edit', $options) .
-        ' | ' .
-        l(t('Delete'), '/admin/config/system/eu-cookie-compliance/categories/' . check_plain($machine_name) . '/delete', $options),
+      l(t('Edit'), '/admin/config/system/eu-cookie-compliance/categories/' . check_plain($machine_name) . '/edit', $options) .
+      ' | ' .
+      l(t('Delete'), '/admin/config/system/eu-cookie-compliance/categories/' . check_plain($machine_name) . '/delete', $options),
     );
   }
 
@@ -134,15 +134,15 @@ function theme_eu_cookie_compliance_admin_categories_form($variables) {
   }
   $output = drupal_render_children($form, array('add_new'));
   $output .= theme('table', array(
-      'header' => $header,
-      'rows' => $rows,
-      'empty' => t('No categories exist yet. <a href="@path">Add new category.</a>', array(
-        '@path' => url('admin/config/system/eu-cookie-compliance/categories/add', $options),
-      )),
-      'attributes' => array(
-        'id' => 'categories-order',
-      ),
-    )
+    'header' => $header,
+    'rows' => $rows,
+    'empty' => t('No categories exist yet. <a href="@path">Add new category.</a>', array(
+      '@path' => url('admin/config/system/eu-cookie-compliance/categories/add', $options),
+    )),
+    'attributes' => array(
+      'id' => 'categories-order',
+    ),
+  )
   );
 
   $output .= drupal_render_children($form);
@@ -174,8 +174,19 @@ function eu_cookie_compliance_admin_categories_form_submit(array $form, array &$
     return $a['weight'] - $b['weight'];
   });
 
+  if (!empty($form_state['values']['domain_settings']['domain_id'])) {
+    $domain_id = $form_state['values']['domain_settings']['domain_id'];
+  }
+  else {
+    $domain_id = NULL;
+  }
+
   $form_state['values'] = array();
   $form_state['values']['eu_cookie_compliance_categories'] = $categories;
+
+  if ($domain_id) {
+    $form_state['values']['domain_id'] = $domain_id;
+  }
 }
 
 /**
@@ -227,12 +238,12 @@ function eu_cookie_compliance_admin_category_form(array $form, array $form_state
     '#title' => t('Label'),
     '#description' => t('The name that will be shown to the visitor.'),
     '#required' => TRUE,
-    '#default_value' => check_plain($category['label']) ?: '',
+    '#default_value' => filter_xss($category['label']) ?: '',
   );
 
   $form['machine_name'] = array(
     '#type' => 'machine_name',
-    '#default_value' => check_plain($category['machine_name']),
+    '#default_value' => filter_xss($category['machine_name']),
     '#machine_name' => array(
       'exists' => 'eu_cookie_compliance_admin_category_exists',
       'source' => array('label'),
@@ -245,7 +256,7 @@ function eu_cookie_compliance_admin_category_form(array $form, array $form_state
     '#title' => t('Description'),
     '#description' => t('The description that will be shown to the visitor.'),
     '#required' => FALSE,
-    '#default_value' => check_plain($category['description']) ?: '',
+    '#default_value' => filter_xss($category['description']) ?: '',
   );
 
   $form['checkbox_default_state'] = array(
@@ -312,8 +323,19 @@ function eu_cookie_compliance_admin_category_form_submit(array $form, array &$fo
   );
 
   $label = $form_state['values']['label'];
+  if (!empty($form_state['values']['domain_id'])) {
+    $domain_id = $form_state['values']['domain_id'];
+  }
+  else {
+    $domain_id = NULL;
+  }
+
   $form_state['values'] = array();
   $form_state['values']['eu_cookie_compliance_categories'] = $categories;
+
+  if ($domain_id) {
+    $form_state['values']['domain_id'] = $domain_id;
+  }
 
   eu_cookie_compliance_clear_caches();
   drupal_set_message(t('The category %label has been saved.', array(
@@ -335,7 +357,7 @@ function eu_cookie_compliance_admin_category_form_submit(array $form, array &$fo
  * @return array
  *   Confirm form render array.
  */
-function eu_cookie_compliance_admin_category_delete_form($form, &$form_state, $machine_name) {
+function eu_cookie_compliance_admin_category_delete_form(array $form, array &$form_state, $machine_name) {
   $categories = variable_get('eu_cookie_compliance_categories', array());
   $form['eu_cookie_compliance_categories'] = array('#type' => 'hidden');
   $category = isset($categories[$machine_name]) ? $categories[$machine_name] : NULL;
@@ -366,7 +388,7 @@ function eu_cookie_compliance_admin_category_delete_form($form, &$form_state, $m
  * @param array $form_state
  *   Form state array.
  */
-function eu_cookie_compliance_admin_category_delete_form_submit($form, &$form_state) {
+function eu_cookie_compliance_admin_category_delete_form_submit(array $form, array &$form_state) {
   $categories = variable_get('eu_cookie_compliance_categories', array());
 
   $label = $categories[$form_state['values']['machine_name']]['label'];

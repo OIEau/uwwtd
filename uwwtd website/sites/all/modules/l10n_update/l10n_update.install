@@ -572,9 +572,9 @@ function l10n_update_update_7205() {
  * Remove 'headers' field from cache table.
  */
 function l10n_update_update_7206() {
-  if (db_field_exists('cache_l10n_update', 'headers')) {
+  /*if (db_field_exists('cache_l10n_update', 'headers')) {
     db_drop_field('cache_l10n_update', 'headers');
-  }
+  }*/
 }
 
 /**

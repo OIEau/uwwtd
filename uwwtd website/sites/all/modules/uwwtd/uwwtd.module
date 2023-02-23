@@ -1227,18 +1227,19 @@ function uwwtd_block_info() {
   return $blocks;
 }
 
-function uwwtd_get_cache_key_agglomeration($option)
+function uwwtd_get_cache_key_agglomeration(array $option)
 {
-    return 'data_agglomeration_' . $option['field_anneedata_value'];
+	//dsm($option);
+	return  'data_agglomeration_' . $option["field_anneedata_value"];
 }
-function uwwtd_get_cache_key_sensitive_area($option)
+function uwwtd_get_cache_key_sensitive_area(array $option)
 {
-    return 'data_sensitive_area_' . $option['field_anneedata_value'];
+    return 'data_sensitive_area_' . $option["field_anneedata_value"];
 }
 
-function uwwtd_get_cache_key_uwwtp($option)
+function uwwtd_get_cache_key_uwwtp(array $option)
 {
-    return 'data_uwwtp_' . $option['field_anneedata_value'];
+    return 'data_uwwtp_' . $option["field_anneedata_value"];
 }
 
 function uwwtd_get_cache_key_dcp($option)
@@ -1257,39 +1258,39 @@ function uwwtd_is_user_anonymous()
     return ($user->uid == 0);
 }
 
-function uwwtd_get_cache_key_page_agglo_compliance($option)
+function uwwtd_get_cache_key_page_agglo_compliance( array $option)
 {
     return 'page_agglomeration_compliance_' . $option['field_anneedata_value'];
 }
-function uwwtd_get_cache_key_page_sensitive_area($option)
+function uwwtd_get_cache_key_page_sensitive_area(array $option)
 {
     return 'page_sensitive_area_' . $option['field_anneedata_value'];
 }
-function uwwtd_get_cache_key_page_dcp($option)
+function uwwtd_get_cache_key_page_dcp(array $option)
 {
     return 'page_dcp_' . $option['field_anneedata_value'];
 }
-function uwwtd_get_cache_key_page_dcp_reuse($option)
+function uwwtd_get_cache_key_page_dcp_reuse(array $option)
 {
     return 'page_dcp_reuse' . $option['field_anneedata_value'];
 }
 
-function uwwtd_get_cache_key_page_agglo_treatment($option)
+function uwwtd_get_cache_key_page_agglo_treatment(array $option)
 {
     return 'page_agglomeration_treatment_' . $option['field_anneedata_value'];
 }
 
-function uwwtd_get_cache_key_page_uwwtp_treatment($option)
+function uwwtd_get_cache_key_page_uwwtp_treatment(array $option)
 {
     return 'page_uwwtp_treatment_' . $option['field_anneedata_value'];
 }
 
-function uwwtd_get_cache_key_page_uwwtp_compliance($option)
+function uwwtd_get_cache_key_page_uwwtp_compliance(array $option)
 {
     return 'page_uwwtp_compliance_' . $option['field_anneedata_value'];
 }
 
-function uwwtd_get_cache_key_page_uwwtp_pressure($option)
+function uwwtd_get_cache_key_page_uwwtp_pressure(array $option)
 {
     return 'page_uwwtp_pressure_' . $option['field_anneedata_value'];
 }
@@ -1470,18 +1471,19 @@ function uwwtd_update_cache_data($list_year = array())
         $list_year = uwwtd_get_all_year();
     }
     foreach($list_year as $year) {
-        $option['field_anneedata_value'] = $year;
+		$option = [];
+        $option["field_anneedata_value"] = $year;
         //clear last cache with empty string
         cache_set(uwwtd_get_cache_key_agglomeration($option), '', 'cache', 10);
-        cache_set(uwwtd_get_cache_key_uwwtp($option), '', 'cache', 10);
-        cache_set(uwwtd_get_cache_key_dcp($option), '', 'cache', 10);
+        cache_set(uwwtd_get_cache_key_uwwtp( $option), '', 'cache', 10);
+        cache_set(uwwtd_get_cache_key_dcp( $option), '', 'cache', 10);
 
         //calculate new cache
-        uwwtd_get_data_agglomeration($option['field_anneedata_value']);
-        uwwtd_get_data_uwwtp($option['field_anneedata_value']);
-        uwwtd_get_data_dcp($option['field_anneedata_value']);
+        uwwtd_get_data_agglomeration($option);
+        uwwtd_get_data_uwwtp($option);
+        uwwtd_get_data_dcp($option);
 
-        //clear cachhe block and page
+        //clear cache block and page
         cache_set(uwwtd_get_cache_key_block_home($option), '', 'cache_block', 10);
 
         cache_set(uwwtd_get_cache_key_page_agglo_compliance($option), '', 'cache_page', 10);
