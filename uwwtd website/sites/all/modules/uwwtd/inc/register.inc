@@ -12140,41 +12140,41 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //                 }
             }
 
-            $context['sandbox'][$typestat]['generated_pe'] += $field_agggenerated;
-            $context['sandbox'][$typestat]['previous_generated_pe'] += $line[$ind['previous_gen._load_p.e.']];
+            $context['sandbox'][$typestat]['generated_pe'] += (float)$field_agggenerated;
+            $context['sandbox'][$typestat]['previous_generated_pe'] += (float)$line[$ind['previous_gen._load_p.e.']];
 //             $context['sandbox'][$typestat]['total_percent'] += $line[$ind['total_%_(2)']];
 //             $context['sandbox'][$typestat]['collected_percent'] += $line[$ind['connected_to_collecting_system']];
-            $context['sandbox'][$typestat]['collected_pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            $context['sandbox'][$typestat]['collected_pe'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
 //             $context['sandbox'][$typestat]['ias_percent'] += $line[$ind['addressed_through_ias_%_of_gen._load']];
-            $context['sandbox'][$typestat]['ias_pe'] += $line[$ind['addressed_through_ias_p._e.']];
+            $context['sandbox'][$typestat]['ias_pe'] += (float)$line[$ind['addressed_through_ias_p._e.']];
 //             $context['sandbox'][$typestat]['not_collected_percent'] += $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
-            $context['sandbox'][$typestat]['not_collected_pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+            $context['sandbox'][$typestat]['not_collected_pe'] += (float)$line[$ind['neither_collecting_system_nor_ias_p._e.']];
 
 //             $context['sandbox'][$typestat]['distance_art3_percent'] += $line[$ind['dist_art3_%_of_gen._load_(3)']];
-            $context['sandbox'][$typestat]['distance_art3_pe'] += $line[$ind['dist_art3_in_p.e.']];
+            $context['sandbox'][$typestat]['distance_art3_pe'] += (float)$line[$ind['dist_art3_in_p.e.']];
 
-            $context['sandbox'][$typestat]['ratio_entering'] += $line[$ind['total_entering_load_p._e.']];
+            $context['sandbox'][$typestat]['ratio_entering'] += (float)$line[$ind['total_entering_load_p._e.']];
 //             $context['sandbox'][$typestat]['ratio_connected_entering'] += $line[$ind['ratio_connected/enentering_%']];
-            $context['sandbox'][$typestat]['ratio_capacity'] += $line[$ind['total_treatment_plant_design_capacity_p._e.']];
+            $context['sandbox'][$typestat]['ratio_capacity'] += (float)$line[$ind['total_treatment_plant_design_capacity_p._e.']];
 //             $context['sandbox'][$typestat]['ratio_entering_capacity'] += $line[$ind['ratio_total_entering_load/total_design_capacity_%']];
 
 //             $context['sandbox'][$typestat]['art4_c_percent'] += $line[$ind['art4_compliant_%_of_gen._load']];
-            $context['sandbox'][$typestat]['art4_c_pe'] += $line[$ind['art4_compliant_p._e.']];
+            $context['sandbox'][$typestat]['art4_c_pe'] += (float)$line[$ind['art4_compliant_p._e.']];
 //             $context['sandbox'][$typestat]['art4_nc_percent'] += $line[$ind['art4_not_compliant_%_of_gen._load']];
-            $context['sandbox'][$typestat]['art4_nc_pe'] += $line[$ind['art4_not_compliant']];
+            $context['sandbox'][$typestat]['art4_nc_pe'] += (float)$line[$ind['art4_not_compliant']];
 //             $context['sandbox'][$typestat]['art4_nr_percent'] += $line[$ind['art4_not_relevant_%_of_gen._load']];
-            $context['sandbox'][$typestat]['art4_nr_pe'] += $line[$ind['art4_not_relevant']];
+            $context['sandbox'][$typestat]['art4_nr_pe'] += (float)$line[$ind['art4_not_relevant']];
 
 //             $context['sandbox'][$typestat]['distance_art4_treatment_percent'] += $line[$ind['dist_art4_treat__%_of_connected_load']];
-            $context['sandbox'][$typestat]['distance_art4_treatment_pe'] += $line[$ind['dist_art4_treat_in_p.e._(4)']];
+            $context['sandbox'][$typestat]['distance_art4_treatment_pe'] += (float)$line[$ind['dist_art4_treat_in_p.e._(4)']];
 //             $context['sandbox'][$typestat]['distance_art4_performance_percent'] += $line[$ind['dist_art4_perf_%_of_connected_load']];
-            $context['sandbox'][$typestat]['distance_art4_performance_pe'] += $line[$ind['dist_art4_perf_in_p.e._(5)']];
+            $context['sandbox'][$typestat]['distance_art4_performance_pe'] += (float)$line[$ind['dist_art4_perf_in_p.e._(5)']];
 
 
 //             $context['sandbox'][$typestat]['distance_art5_treatment_percent'] += $line[$ind['distance_art5_treat_%_of_gen._load']];
-            $context['sandbox'][$typestat]['distance_art5_treatment_pe'] += $line[$ind['distance_art5_treat_in_p.e._(6)']];
+            $context['sandbox'][$typestat]['distance_art5_treatment_pe'] += (float)$line[$ind['distance_art5_treat_in_p.e._(6)']];
 //             $context['sandbox'][$typestat]['distance_art5_performance_percent'] += $line[$ind['distance_art5_perf_%_of_gen._load']];
-            $context['sandbox'][$typestat]['distance_art5_performance_pe'] += $line[$ind['distance_art5_perf_in_p.e._(7)']];
+            $context['sandbox'][$typestat]['distance_art5_performance_pe'] += (float)$line[$ind['distance_art5_perf_in_p.e._(7)']];
 
             $context['sandbox'][$typestat]['secondary_installed'] += (float)$line[$ind['secondary_treatment_installed_(p._e.)']];
             $context['sandbox'][$typestat]['secondary_monitoring'] += (float)$line[$ind['monitoring_results_f._secondary_ok']];
@@ -12210,23 +12210,23 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             }
 
             $context['sandbox'][$type_rca]['subjected_agglo']++;
-            $context['sandbox'][$type_rca]['subjected_load']['generated'] += $field_agggenerated;
-            $context['sandbox'][$type_rca]['subjected_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            $context['sandbox'][$type_rca]['subjected_load']['generated'] += (float)$field_agggenerated;
+            $context['sandbox'][$type_rca]['subjected_load']['collected'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
 
             if ($agg->field_aggcompliance['und'][0]['value'] == 'C') {
                 $context['sandbox'][$type_rca]['compliant_agglo']++;
-                $context['sandbox'][$type_rca]['compliant_load']['generated'] += $field_agggenerated;
-                $context['sandbox'][$type_rca]['compliant_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
+                $context['sandbox'][$type_rca]['compliant_load']['generated'] += (float)$field_agggenerated;
+                $context['sandbox'][$type_rca]['compliant_load']['collected'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
             }
             if ($agg->field_aggcompliance['und'][0]['value'] == 'NC') {
                 $context['sandbox'][$type_rca]['notcompliant_agglo']++;
-                $context['sandbox'][$type_rca]['notcompliant_load']['generated'] += $field_agggenerated;
-                $context['sandbox'][$type_rca]['notcompliant_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
+                $context['sandbox'][$type_rca]['notcompliant_load']['generated'] += (float)$field_agggenerated;
+                $context['sandbox'][$type_rca]['notcompliant_load']['collected'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
             }
             if ($pending_or_expired == 'PD') {
                 $context['sandbox'][$type_rca]['exempted']++;
-                $context['sandbox'][$type_rca]['exempted_load']['generated'] += $field_agggenerated;
-                $context['sandbox'][$type_rca]['exempted_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
+                $context['sandbox'][$type_rca]['exempted_load']['generated'] += (float)$field_agggenerated;
+                $context['sandbox'][$type_rca]['exempted_load']['collected'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
             }
         }
 
@@ -12235,41 +12235,41 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         ////////////////////////////////////////////////////////////////////////
 
         if ($field_agggenerated >= 2000 && $field_agggenerated < 10001) {
-            $context['results']['graph']['0_10000']['pe']  += $field_agggenerated;
+            $context['results']['graph']['0_10000']['pe']  += (float)$field_agggenerated;
             $context['results']['graph']['0_10000']['number']++;
         } elseif ($field_agggenerated >= 10001 && $field_agggenerated < 100001) {
-            $context['results']['graph']['10000_100000']['pe']  += $field_agggenerated;
+            $context['results']['graph']['10000_100000']['pe']  += (float)$field_agggenerated;
             $context['results']['graph']['10000_100000']['number']++;
         } elseif ($field_agggenerated >= 100001) {
-            $context['results']['graph']['100000_n']['pe']  += $field_agggenerated;
+            $context['results']['graph']['100000_n']['pe']  += (float)$field_agggenerated;
             $context['results']['graph']['100000_n']['number']++;
         }
 
         //array2
-        $context['results']['graph']['total_generated']['pe'] += $field_agggenerated;
-        $context['results']['graph']['total_collected']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
-        $context['results']['graph']['total_load_ias']['pe'] += $line[$ind['addressed_through_ias_p._e.']];
-        $context['results']['graph']['total_entering']['pe'] += $line[$ind['total_entering_load_p._e.']];
+        $context['results']['graph']['total_generated']['pe'] += (float)$field_agggenerated;
+        $context['results']['graph']['total_collected']['pe'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
+        $context['results']['graph']['total_load_ias']['pe'] += (float)$line[$ind['addressed_through_ias_p._e.']];
+        $context['results']['graph']['total_entering']['pe'] += (float)$line[$ind['total_entering_load_p._e.']];
 
         //array 5 6 7
         if ($line[$ind['art3_compliance']] == 'C' || $line[$ind['art3_compliance']] == 'QC') {
             $context['results']['graph']['art3_C']['number']++;
-            $context['results']['graph']['art3_C']['pe'] += $field_agggenerated;
+            $context['results']['graph']['art3_C']['pe'] += (float)$field_agggenerated;
         }
         if ($line[$ind['art3_compliance']] == 'NC') {
             $context['results']['graph']['art3_NC']['number']++;
-            $context['results']['graph']['art3_NC']['pe'] += $field_agggenerated;
+            $context['results']['graph']['art3_NC']['pe'] += (float)$field_agggenerated;
         }
         if ($line[$ind['art3_compliance']] == 'NR' || $line[$ind['art3_compliance']] == 'PD') {
             $context['results']['graph']['art3_NR']['number']++;
-            $context['results']['graph']['art3_NR']['pe'] += $field_agggenerated;
+            $context['results']['graph']['art3_NR']['pe'] += (float)$field_agggenerated;
             if($line[$ind['art3_compliance']] == 'NR'){
                 $context['results']['graph']['art3_NR_only']['number']++;
-                $context['results']['graph']['art3_NR_only']['pe'] += $field_agggenerated;
+                $context['results']['graph']['art3_NR_only']['pe'] += (float)$field_agggenerated;
             }
             elseif($line[$ind['art3_compliance']] == 'PD'){
                 $context['results']['graph']['art3_PD_only']['number']++;
-                $context['results']['graph']['art3_PD_only']['pe'] += $field_agggenerated;
+                $context['results']['graph']['art3_PD_only']['pe'] += (float)$field_agggenerated;
             }
             
         }
@@ -12277,56 +12277,56 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         
         if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {
             $context['results']['graph']['art4_C']['number']++;
-            $context['results']['graph']['art4_C']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            $context['results']['graph']['art4_C']['pe'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
             if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2) {
-                $context['results']['graph']['art4_NC']['pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+                $context['results']['graph']['art4_NC']['pe'] += (float)$line[$ind['neither_collecting_system_nor_ias_p._e.']];
             }
         }
         if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NC') {
             $context['results']['graph']['art4_NC']['number']++;
-            $context['results']['graph']['art4_NC']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            $context['results']['graph']['art4_NC']['pe'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
             if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2) {
-                $context['results']['graph']['art4_NC']['pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+                $context['results']['graph']['art4_NC']['pe'] += (float)$line[$ind['neither_collecting_system_nor_ias_p._e.']];
             }
         }
         if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR' || $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'PD') {
             $context['results']['graph']['art4_NR']['number']++;
-            $context['results']['graph']['art4_NR']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            $context['results']['graph']['art4_NR']['pe'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
             if($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR' ){
                 $context['results']['graph']['art4_NR_only']['number']++;
-                $context['results']['graph']['art4_NR_only']['pe'] += $field_agggenerated;
+                $context['results']['graph']['art4_NR_only']['pe'] += (float)$field_agggenerated;
             }
             elseif($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'PD'){
                 $context['results']['graph']['art4_PD_only']['number']++;
-                $context['results']['graph']['art4_PD_only']['pe'] += $field_agggenerated;
+                $context['results']['graph']['art4_PD_only']['pe'] += (float)$field_agggenerated;
             }
         }
         if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
             $context['results']['graph']['art5_C']['number']++;
-            $context['results']['graph']['art5_C']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            $context['results']['graph']['art5_C']['pe'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
             //manage report of dwt values at art 5 level
             if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2) {
-                $context['results']['graph']['art5_NC']['pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+                $context['results']['graph']['art5_NC']['pe'] += (float)$line[$ind['neither_collecting_system_nor_ias_p._e.']];
             }
         }
         if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC') {
             $context['results']['graph']['art5_NC']['number']++;
-            $context['results']['graph']['art5_NC']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            $context['results']['graph']['art5_NC']['pe'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
             //manage report of dwt values at art 5 level
             if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2) {
-                $context['results']['graph']['art5_NC']['pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+                $context['results']['graph']['art5_NC']['pe'] += (float)$line[$ind['neither_collecting_system_nor_ias_p._e.']];
             }
         }
         if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR' || $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
             $context['results']['graph']['art5_NR']['number']++;
-            $context['results']['graph']['art5_NR']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            $context['results']['graph']['art5_NR']['pe'] += (float)$line[$ind['connected_to_collecting_system_p._e.']];
             if($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR' ){
                 $context['results']['graph']['art5_NR_only']['number']++;
-                $context['results']['graph']['art5_NR_only']['pe'] += $field_agggenerated;
+                $context['results']['graph']['art5_NR_only']['pe'] += (float)$field_agggenerated;
             }
             elseif($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD'){
                 $context['results']['graph']['art5_PD_only']['number']++;
-                $context['results']['graph']['art5_PD_only']['pe'] += $field_agggenerated;
+                $context['results']['graph']['art5_PD_only']['pe'] += (float)$field_agggenerated;
             }
         }
         ////////////////////////////////////////////////////////////////////////
@@ -12351,9 +12351,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $agg->field_region_nuts1['und'][0]['value'] = $nuts1;
         $agg->field_region_nuts2['und'][0]['value'] = $nuts2;
         $agg->field_region_nuts3['und'][0]['value'] = $nuts3;
-        $agg->field_agg_connected_load_pe['und'][0]['value'] = number_format($line[$ind['connected_to_collecting_system_p._e.']], 0,'.','');
-        $agg->field_agg_ias_load_pe['und'][0]['value'] = number_format($line[$ind['addressed_through_ias_p._e.']], 0,'.','');
-        $agg->field_agg_discharge_pe['und'][0]['value'] = number_format($line[$ind['neither_collecting_system_nor_ias_p._e.']], 0,'.','');
+        $agg->field_agg_connected_load_pe['und'][0]['value'] = number_format((float)$line[$ind['connected_to_collecting_system_p._e.']], 0,'.','');
+        $agg->field_agg_ias_load_pe['und'][0]['value'] = number_format((float)$line[$ind['addressed_through_ias_p._e.']], 0,'.','');
+        $agg->field_agg_discharge_pe['und'][0]['value'] = number_format((float)$line[$ind['neither_collecting_system_nor_ias_p._e.']], 0,'.','');
 
         $agg->field_agg_art3_comp_register['und'][0]['value'] = $line[$ind['art3_compliance']];
         $agg->field_agg_art4_comp_register['und'][0]['value'] = $line[$ind['art4_compliance_art._4_(hierarchical_approach)']];
