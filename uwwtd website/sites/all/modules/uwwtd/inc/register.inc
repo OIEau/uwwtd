@@ -11565,7 +11565,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['not_relevant_5_c_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_NR_pe'];
 
         //'Compliance Art. 5c (only)',
-        $line[$ind['compliance_art._5c_(only)']] = uwwtd_register_getcompliance_art5x_only('c', $ind, $line, $uwwtpinfo_for_agglo['art5c_NC_collected_%'], $annee, substr($agg->field_aggperiodover5['und'][0]['value'], 0, 4));
+		if(isset($agg->field_aggperiodover5['und'])) $aggperiodover5 =substr($agg->field_aggperiodover5['und'][0]['value'], 0, 4);
+		else $aggperiodover5 =null;
+        $line[$ind['compliance_art._5c_(only)']] = uwwtd_register_getcompliance_art5x_only('c', $ind, $line, $uwwtpinfo_for_agglo['art5c_NC_collected_%'], $annee, $aggperiodover5);
         //'Compliance Art. 5c (hierarchical approach)',
         $line[$ind['compliance_art._5c_(hierarchical_approach)']] =  uwwtd_register_getcompliance_art5x_hierarchical('c', $ind, $line);
 
