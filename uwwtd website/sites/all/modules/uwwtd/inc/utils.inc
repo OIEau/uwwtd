@@ -122,25 +122,27 @@ if (!function_exists('delete_col')) {
 
 function uwwtd_force_cache(){
     //get all available year
-    $years = uwwtd_get_all_year();
+    $years = array_values(uwwtd_get_all_year());
+    //Start operation 
+    if(!empty($years)){  
+		$operations = [];	
+		//Set batches
+		$operations[] = array('uwwtd_force_cache_agg', array($years));
+		$operations[] = array('uwwtd_force_cache_uwwtp', array($years));
+		$operations[] = array('uwwtd_force_cache_dcp', array($years));
+		$operations[] = array('uwwtd_force_cache_sensitive_area', array($years));
     
-    //Set batches
-    $operations[] = array('uwwtd_force_cache_agg', array('years'=>$years));
-    $operations[] = array('uwwtd_force_cache_uwwtp', array('years'=>$years));
-    $operations[] = array('uwwtd_force_cache_dcp', array('years'=>$years));
-    $operations[] = array('uwwtd_force_cache_sensitive_area', array('years'=>$years));
-    
-        //Start operation 
-    if(!empty($years)){
-        $batch = array(
-            'operations' => $operations,
-            'finished' => 'uwwtd_force_cache_finish',
+
+        $batch = [
             'title' => t('Processing Batch'),
+			'operations' => $operations,
             'init_message' => t('Batch is starting for years: ').implode(', ', $years),
             'progress_message' => t('Processed @current out of @total.'),
             'error_message' => t('Harvesting Batch has encountered an error.'),
             'file' => drupal_get_path('module', 'uwwtd') . '/inc/utils.inc',
-        );
+			'finished' => 'uwwtd_force_cache_finish',
+			
+        ];
         batch_set($batch); //Starting the Batch
         batch_process('admin/config/uwwtd'); 
     }
