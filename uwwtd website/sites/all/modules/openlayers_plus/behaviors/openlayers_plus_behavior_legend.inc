@@ -127,10 +127,10 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
         
         //Gestion des couches avec un style Openlayers
         if(is_array($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]) && isset($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]['styles'])){
-            $additional_legend = '';            
+            $additional_legend = '';     
             foreach($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]['styles'] as $ks=>$style){
-                if(isset($styles[$style]) && !empty($styles[$style]->data)){
-                    $additional_legend .= '<div><div style="background-color:'.$styles[$style]->data['fillColor'].';border:1px solid #222222;width:20px;height:12px;float:left;margin-right:7px;">&nbsp;</div><div>'.t($styles[$style]->title) .'</div></div>';
+                if(isset($styles[$ks]) && isset($styles[$ks]->data) && !empty($styles[$ks]->data)){
+                    $additional_legend .= '<div><div style="background-color:'.$styles[$ks]->data['fillColor'].';border:1px solid #222222;width:20px;height:12px;float:left;margin-right:7px;">&nbsp;</div><div>'.t($styles[$ks]->title) .'</div></div>';
                 }
                 //The style is directly define in the layer definition
                 elseif(is_array($style)){
