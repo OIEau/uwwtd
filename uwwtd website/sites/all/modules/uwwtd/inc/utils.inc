@@ -1394,8 +1394,8 @@ function uwwtd_get_distance_compliance($agg){
                     $art5compliancePerf = 'NC';
                 }
                 if ($art5compliancePerf == 'NR') {
-                    $dist_art5_perf_pe = '-';
-                    $dist_art5_perf_percent = '-';
+                    $dist_art5_perf_pe = 0;
+                    $dist_art5_perf_percent = 0;
                 }
           }
         }
