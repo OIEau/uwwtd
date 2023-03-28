@@ -2196,7 +2196,7 @@ function uwwtd_table($vars) {
   if ($rows_multiple) {
     $thead_set = '';
     // Format the table header:
-    if (count($header)) {
+    if (!empty($header)) {
       $output .= ' <thead>';
       $ts = tablesort_init($header);
       foreach ($header as $number => $head) {
@@ -2214,7 +2214,7 @@ function uwwtd_table($vars) {
         $output .= '</tr>';
       }
       // Using ternary operator to close the tags based on whether or not there are rows
-      $output .= (count($rows) ? " </thead>\n" : "</tr>\n");
+      $output .= (count((array)$rows) ? " </thead>\n" : "</tr>\n");
     } else {
       $ts = array();
     }
@@ -2223,7 +2223,7 @@ function uwwtd_table($vars) {
   // One header row
   else {
     // Format the table header:
-    if (count($header)) {
+    if (!empty($header)) {
       $ts = tablesort_init($header);
       // HTML requires that the thead tag has tr tags in it followed by tbody
       // tags. Using ternary operator to check and see if we have any rows.
@@ -2233,14 +2233,14 @@ function uwwtd_table($vars) {
         $output .= _theme_table_cell($cell, TRUE);
       }
       // Using ternary operator to close the tags based on whether or not there are rows
-      $output .= (count($rows) ? " </tr></thead>\n" : "</tr>\n");
+      $output .= (count((array)$rows) ? " </tr></thead>\n" : "</tr>\n");
     } else {
       $ts = array();
     }
   }
 
   // Format the table rows:
-  if (count($rows)) {
+  if (!empty($rows)) {
     $output .= "<tbody>\n";
     $flip = array('even' => 'odd', 'odd' => 'even');
     $class = 'even';

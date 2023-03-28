@@ -1502,20 +1502,21 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 
     $header = array();
     $header_export = array();
-    $keys = array_keys($rows[0]['data']);
-    foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp'] as $field => $info) {
-        if(in_array($field, $keys)){
-            $header[$field] = array(
-                'data' => $info['label'],
-                'field' => $field,
-                'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
-                'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
-            );
-            $header_export[] = $info['label'];
-        }
-        
+	if(isset($rows[0])){
+		$keys = array_keys($rows[0]['data']);
+		foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp'] as $field => $info) {
+			if(in_array($field, $keys)){
+				$header[$field] = array(
+					'data' => $info['label'],
+					'field' => $field,
+					'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
+					'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
+				);
+				$header_export[] = $info['label'];
+			}
+			
+		}
     }
-    
     //here export data and exit
     if ($type_export != '') {
     	if ($type_export === 'xls') {
