@@ -904,22 +904,22 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $header = array();
     $header_export = array();
 
-
-    $keys = array_keys($rows[0]['data']);
-    foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration'] as $field => $info) {
-        if (!empty($field) && !empty($keys)) {
-            if(in_array($field, $keys)){
-                $header[$field] = array(
-                    'data' => $info['label'],
-                    'field' => $field,
-                    'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
-                    'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
-                );
-                $header_export[] = $info['label'];
-            }
-        }
-    }
-
+	if(isset($rows[0])){
+		$keys = array_keys($rows[0]['data']);
+		foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration'] as $field => $info) {
+			if (!empty($field) && !empty($keys)) {
+				if(in_array($field, $keys)){
+					$header[$field] = array(
+						'data' => $info['label'],
+						'field' => $field,
+						'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
+						'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
+					);
+					$header_export[] = $info['label'];
+				}
+			}
+		}
+	}
     //here export data and exit
     if ($type_export != '') {
     	if ($type_export === 'xls') {
@@ -1231,20 +1231,21 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     
     $header = array();
     $header_export = array();
-    $keys = array_keys($rows[0]['data']);
-    foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] as $field => $info) {
-        if(in_array($field, $keys)){
-            $header[$field] = array(
-                'data' => $info['label'],
-                'field' => $field,
-                'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
-                'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
-            );
-            $header_export[] = $info['label'];
-        }
-        
+	if(isset($rows[0])){
+		$keys = array_keys($rows[0]['data']);
+		foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] as $field => $info) {
+			if(in_array($field, $keys)){
+				$header[$field] = array(
+					'data' => $info['label'],
+					'field' => $field,
+					'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
+					'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
+				);
+				$header_export[] = $info['label'];
+			}
+			
+		}
     }
-    
     //here export data and exit
     if ($type_export != '') {
     	if ($type_export === 'xls') {
@@ -1816,20 +1817,21 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 
     $header = array();
     $header_export = array();
-    $keys = array_keys($rows[0]['data']);
-    foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] as $field => $info) {
-        if(in_array($field, $keys)){
-            $header[$field] = array(
-                'data' => $info['label'],
-                'field' => $field,
-                'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
-                'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
-            );
-            $header_export[] = $info['label'];
-        }
-        
-    }
-
+	if(isset($rows[0])){
+		$keys = array_keys($rows[0]['data']);
+		foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] as $field => $info) {
+			if(in_array($field, $keys)){
+				$header[$field] = array(
+					'data' => $info['label'],
+					'field' => $field,
+					'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
+					'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
+				);
+				$header_export[] = $info['label'];
+			}
+			
+		}
+	}
     //here export data and exit
     if ($type_export != '') {
     	if ($type_export === 'xls') {
@@ -2099,19 +2101,21 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
     }
     $header = array();
     $header_export = array();
-    $keys = array_keys($rows[0]['data']);
-    foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] as $field => $info) {
-        if(in_array($field, $keys)){
-            $header[$field] = array(
-                'data' => $info['label'],
-                'field' => $field,
-                'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
-                'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
-            );
-            $header_export[] = $info['label'];
-        }
-        
-    }
+	if(isset($rows[0])){
+		$keys = array_keys($rows[0]['data']);
+		foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] as $field => $info) {
+			if(in_array($field, $keys)){
+				$header[$field] = array(
+					'data' => $info['label'],
+					'field' => $field,
+					'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
+					'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
+				);
+				$header_export[] = $info['label'];
+			}
+			
+		}
+	}
     //here export data and exit
     if ($type_export != '') {
     	if ($type_export === 'xls') {
