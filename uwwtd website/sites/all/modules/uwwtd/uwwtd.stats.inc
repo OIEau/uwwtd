@@ -1470,15 +1470,24 @@ $ref_date = strtotime( ($year+2) .'-12-31T23:59:00');
 			$v['yearly_inv'] = $v['soeinvtot']/$v['nb_year'];
 			$art17_mslevel_data[$v['soecperiod']][substr($v['soecstartyear'],0,4)] = $v;  
 		}
-		$cu_invest = array_column($art17_mslevel_data['CU'], 'yearly_inv');
-		$cu_investment_inh = (array_sum($cu_invest)*1000000/$population)/count($cu_invest);
-		$exp_invest = array_column($art17_mslevel_data['EXP'], 'yearly_inv');
-		$exp_invest_inh = (array_sum($exp_invest)*1000000/$population)/count($exp_invest);
-		$years = array_keys($art17_mslevel_data['EXP']);
-		$min_k = min($years);
-		$max_k = max($years);
-		$begin_y = (integer)substr($art17_mslevel_data['EXP'][$min_k]['soecstartyear'],0,4);
-		$end_y =  (integer)substr($art17_mslevel_data['EXP'][$max_k]['soecendyear'],0,4);
+		if(isset($art17_mslevel_data['CU'])){
+			$cu_invest = array_column($art17_mslevel_data['CU'], 'yearly_inv');
+			$cu_investment_inh = (array_sum($cu_invest)*1000000/$population)/count($cu_invest);
+		}else{
+			$cu_investment_inh = 0;
+		}
+		if(isset($art17_mslevel_data['EXP'])){
+			$exp_invest = array_column($art17_mslevel_data['EXP'], 'yearly_inv');
+			$exp_invest_inh = (array_sum($exp_invest)*1000000/$population)/count($exp_invest);
+			$years = array_keys($art17_mslevel_data['EXP']);
+			$min_k = min($years);
+			$max_k = max($years);
+			$begin_y = (integer)substr($art17_mslevel_data['EXP'][$min_k]['soecstartyear'],0,4);
+			$end_y =  (integer)substr($art17_mslevel_data['EXP'][$max_k]['soecendyear'],0,4);
+		}else{
+			$exp_invest_inh = 0;
+		}
+		
 	}
     $begin_y = min([$art_17_uwwtp_inv_min_year, $art_17_agg_inv_min_year]);
     $end_y =  max([$art_17_uwwtp_inv_max_year, $art_17_agg_inv_max_year]);
