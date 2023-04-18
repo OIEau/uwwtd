@@ -1456,7 +1456,8 @@ function uwwtd_get_uww_graphic($node) {
 
   $output .= '<div class="dcp-connections" style="top: -' . $offset . 'px">';
 
-  $nbDcps = count($reseau['dcps']);
+  $nbDcps = 0;
+  if(!empty($reseau['dcps'])) $nbDcps = count($reseau['dcps']);
   $totalDcps = $totalDcps + $nbDcps;
   $nbDcpsT = 0;
   $nbDcpsB = 0;
@@ -1492,7 +1493,7 @@ function uwwtd_get_uww_graphic($node) {
             <div>
                 <img width="80px" src="' . $src . '/images/graphic/dcp.png" alt="reseau"  title="'.t('Discharge point').'">
                     <div class="graphic-title">';
-  $output .= l(count($reseau['dcps']) . " DCP(S)", "#");
+  $output .= l($nbDcps . " DCP(S)", "#");
   $output .= '<div class="dcps-hidden-list">';
   $output .= 'Discharge point: ';
   foreach ($reseau['dcps'] as $dcp) {
